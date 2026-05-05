@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Prashant Singh — PM Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --amber:#E8A020; --amber-dim:rgba(232,160,32,0.1); --amber-border:rgba(232,160,32,0.25);
+  --text-1:#EDE8DC; --text-2:#8C9BB5; --text-3:#546070;
+  --surface:#0D1225; --surface-2:#111929; --border:#1D2840; --bg:#080C1A;
+  --blue:#60A5FA; --green:#34D399; --orange:#FB923C; --purple:#A78BFA;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text-1);font-family:'Outfit',sans-serif;font-size:16px;line-height:1.6;overflow-x:hidden;}
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+/* ── NAV ─────────────────────────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;background:rgba(8,12,26,0.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;}
+.nav-brand{font-family:'Cormorant Garamond',serif;color:var(--text-1);font-size:1.1rem;font-weight:600;letter-spacing:0.04em;}
+.nav-links{display:flex;gap:0.25rem;align-items:center;}
+.nav-links a{color:var(--text-2);font-size:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.1em;text-decoration:none;padding:0.35rem 0.75rem;border-radius:4px;transition:color 0.15s,background 0.15s;}
+.nav-links a:hover{color:var(--text-1);background:rgba(255,255,255,0.04);}
+.nav-links a.active{color:var(--amber);}
+.nav-cta{background:var(--amber);color:var(--bg);padding:0.4rem 1.1rem;border-radius:5px;font-size:0.75rem;font-weight:600;letter-spacing:0.04em;text-decoration:none;transition:opacity 0.15s;margin-left:0.5rem;}
+.nav-cta:hover{opacity:0.88;}
+
+/* ── HERO ────────────────────────────────────────────────────────────────── */
+.hero{min-height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;cursor:none;background:#06091a;}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+.hero-top{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;padding:5rem 2rem 1.5rem;position:relative;z-index:1;min-height:0;}
+.hero-inner{position:relative;z-index:1;max-width:780px;display:flex;flex-direction:column;align-items:center;transition:transform 0.08s ease-out;will-change:transform;}
+.hero-role{display:flex;gap:0.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.75rem;}
+.role-chip{background:rgba(232,160,32,0.1);border:1px solid rgba(232,160,32,0.28);color:var(--amber);padding:0.38rem 1rem;border-radius:100px;font-size:0.82rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;opacity:0;transform:translateY(20px) scale(0.8);animation:chipBounce 0.7s cubic-bezier(0.34,1.56,0.64,1) forwards;}
+.role-chip:nth-child(1){animation-delay:0.15s;}.role-chip:nth-child(2){animation-delay:0.28s;}.role-chip:nth-child(3){animation-delay:0.41s;}
+@keyframes chipBounce{to{opacity:1;transform:translateY(0) scale(1);}}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(4rem,11vw,7.5rem);font-weight:700;color:var(--text-1);line-height:0.95;letter-spacing:-0.02em;margin-bottom:1.75rem;min-height:1.1em;}
+.n-char{display:inline-block;transition:color 0.08s,text-shadow 0.1s;}
+.n-char.scrambling{color:rgba(232,160,32,0.6);text-shadow:0 0 14px rgba(232,160,32,0.45);}
+.n-char.done{color:var(--text-1);}
+.hero-bio{color:var(--text-2);font-size:clamp(0.94rem,2vw,1.06rem);line-height:1.8;max-width:520px;margin-bottom:2.5rem;opacity:0;animation:fadeUp 0.7s 0.9s ease forwards;}
+.hero-bio strong{color:var(--text-1);font-weight:500;}
+.hero-btns{display:flex;gap:0.85rem;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem;opacity:0;animation:fadeUp 0.7s 1.05s ease forwards;}
+.mag-wrap{display:inline-block;transition:transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94);}
+.btn-p{background:var(--amber);color:var(--bg);padding:0.85rem 2rem;border-radius:6px;font-weight:600;font-size:0.92rem;text-decoration:none;display:inline-block;}
+.btn-p:hover{box-shadow:0 8px 28px rgba(232,160,32,0.28);}
+.btn-s{border:1px solid var(--border);color:var(--text-1);padding:0.85rem 2rem;border-radius:6px;font-weight:400;font-size:0.92rem;text-decoration:none;display:inline-block;}
+.btn-s:hover{border-color:rgba(255,255,255,0.2);}
+.hero-arc{font-size:0.8rem;font-weight:500;letter-spacing:0.12em;text-transform:uppercase;color:var(--text-2);min-height:1.4em;opacity:0;animation:fadeUp 0.5s 1.2s ease forwards;}
+.arc-cur{display:inline-block;color:var(--amber);animation:blink 0.9s step-end infinite;}
+@keyframes blink{50%{opacity:0;}}
+#c-ring{position:fixed;width:38px;height:38px;border:1.5px solid rgba(232,160,32,0.55);border-radius:50%;pointer-events:none;z-index:150;transform:translate(-50%,-50%);transition:width 0.2s,height 0.2s,background 0.2s,border-color 0.2s;mix-blend-mode:screen;}
+#c-dot{position:fixed;width:6px;height:6px;background:var(--amber);border-radius:50%;pointer-events:none;z-index:10000;transform:translate(-50%,-50%);box-shadow:0 0 10px rgba(232,160,32,0.9),0 0 20px rgba(232,160,32,0.4);}
+body{cursor:none;}
+.hero-arc span{color:var(--amber);}
+
+/* ── SECTIONS ────────────────────────────────────────────────────────────── */
+.sec{padding:6rem 2rem;opacity:0;transform:translateY(24px);transition:opacity 0.7s ease,transform 0.7s ease;}
+.sec.vis{opacity:1;transform:translateY(0);}
+.wrap{max-width:1040px;margin:0 auto;}
+.wrap-sm{max-width:800px;margin:0 auto;}
+.alt{background:var(--surface-2);}
+.sec-label{font-size:0.7rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-3);margin-bottom:0.5rem;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3rem);font-weight:600;color:var(--text-1);line-height:1.1;letter-spacing:-0.01em;margin-bottom:3rem;}
+
+/* ── TIMELINE ────────────────────────────────────────────────────────────── */
+.tl{position:relative;}
+.tl-spine{position:absolute;left:22px;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--amber) 0%,rgba(232,160,32,0.15) 30%,var(--border) 100%);}
+.tl-row{display:flex;gap:1.5rem;margin-bottom:2rem;}
+.tl-node{width:44px;min-width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--border);z-index:1;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.tl-node.now{background:var(--amber);border-color:var(--amber);box-shadow:0 0 0 4px rgba(232,160,32,0.15),0 0 20px rgba(232,160,32,0.3);animation:pulse 2.5s ease-in-out infinite;}
+.tl-node.now::after{content:'';width:10px;height:10px;border-radius:50%;background:var(--bg);}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(232,160,32,0.15),0 0 20px rgba(232,160,32,0.3);}50%{box-shadow:0 0 0 8px rgba(232,160,32,0.08),0 0 30px rgba(232,160,32,0.4);}}
+.tl-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:1.4rem;flex:1;cursor:pointer;transition:border-color 0.2s,transform 0.2s;}
+.tl-card:hover{border-color:rgba(255,255,255,0.12);transform:translateX(3px);}
+.tl-card.now-card{border-color:var(--amber-border);}
+.tl-head{display:flex;justify-content:space-between;align-items:flex-start;gap:0.5rem;margin-bottom:0.6rem;}
+.tl-period{font-size:0.7rem;font-weight:500;letter-spacing:0.08em;color:var(--text-3);text-transform:uppercase;}
+.tl-here{background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber-border);padding:0.15rem 0.6rem;border-radius:100px;font-size:0.66rem;font-weight:600;letter-spacing:0.06em;}
+.tl-co{font-family:'Cormorant Garamond',serif;font-size:1.2rem;font-weight:600;color:var(--text-1);margin-bottom:0.15rem;}
+.tl-role{font-size:0.8rem;color:var(--text-2);margin-bottom:0.6rem;}
+.tl-hi{font-size:0.85rem;color:var(--text-1);opacity:0.78;line-height:1.55;}
+.tl-learn{margin-top:0.8rem;padding-top:0.8rem;border-top:1px solid var(--border);font-size:0.78rem;color:var(--text-2);font-style:italic;line-height:1.6;}
+.tl-easter{margin-top:0.6rem;padding:0.5rem 0.8rem;background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:6px;color:var(--amber);font-size:0.84rem;display:none;}
+
+/* ── CASE STUDIES ────────────────────────────────────────────────────────── */
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(295px,1fr));gap:1.25rem;}
+.cs-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.6rem;cursor:pointer;transition:transform 0.2s,border-color 0.2s;display:flex;flex-direction:column;}
+.cs-card:hover{transform:translateY(-3px);}
+.cs-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.85rem;gap:0.5rem;}
+.cs-tag{padding:0.18rem 0.65rem;border-radius:100px;font-size:0.66rem;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;}
+.cs-co{font-size:0.68rem;color:var(--text-3);text-align:right;line-height:1.4;}
+.cs-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text-1);margin-bottom:0.55rem;line-height:1.25;}
+.cs-prob{font-size:0.82rem;color:var(--text-2);line-height:1.65;margin-bottom:1rem;flex:1;}
+.cs-wins{display:flex;flex-direction:column;gap:0.32rem;margin-bottom:0.85rem;}
+.cs-win{display:flex;align-items:center;gap:0.45rem;font-size:0.78rem;color:var(--text-1);opacity:0.85;}
+.win-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.cs-cta{font-size:0.75rem;font-weight:600;margin-top:auto;}
+.cs-locked{background:var(--surface);border:1px dashed var(--border);border-radius:12px;padding:1.6rem;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:0.6rem;text-align:center;}
+
+/* ── SHARED MODAL ────────────────────────────────────────────────────────── */
+.modal-bg{position:fixed;inset:0;background:rgba(8,12,26,0.88);z-index:400;display:none;align-items:center;justify-content:center;padding:1.5rem;}
+.modal-bg.open{display:flex;animation:bgFade 0.2s ease;}
+.modal-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:2.5rem;max-width:640px;width:100%;max-height:88vh;overflow-y:auto;position:relative;animation:modalIn 0.25s ease;}
+@keyframes bgFade{from{opacity:0;}to{opacity:1;}}
+@keyframes modalIn{from{opacity:0;transform:scale(0.97) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
+.modal-x{position:absolute;top:1.25rem;right:1.25rem;background:none;border:none;color:var(--text-3);font-size:1.4rem;cursor:pointer;line-height:1;transition:color 0.15s;}
+.modal-x:hover{color:var(--text-1);}
+
+/* Case study modal */
+.m-tag{padding:0.18rem 0.65rem;border-radius:100px;font-size:0.66rem;font-weight:600;display:inline-block;margin-bottom:0.75rem;}
+.m-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;color:var(--text-1);margin-bottom:2rem;line-height:1.15;}
+.m-block{margin-bottom:1.35rem;}
+.m-label{font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:0.38rem;}
+.m-text{font-size:0.92rem;color:var(--text-1);opacity:0.82;line-height:1.75;}
+
+/* Blog post modal */
+.bp-label{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:0.5rem;}
+.bp-title{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--text-1);line-height:1.15;margin-bottom:0.75rem;}
+.bp-meta{display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border);}
+.bp-tag{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);padding:0.14rem 0.48rem;border-radius:4px;font-size:0.68rem;}
+.bp-time{color:var(--text-3);font-size:0.72rem;}
+/* Storytelling content blocks */
+.bp-hook{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-style:italic;color:var(--text-1);line-height:1.65;margin-bottom:1.5rem;padding-left:1rem;border-left:2px solid var(--amber);}
+.bp-body{font-size:0.93rem;color:var(--text-1);opacity:0.85;line-height:1.85;margin-bottom:1.25rem;}
+.bp-takeaway{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:8px;padding:1rem 1.25rem;font-size:0.9rem;font-style:italic;color:var(--amber);line-height:1.6;margin-top:1.75rem;}
+/* Rich content blocks in blog modal */
+.bp-divider{border:none;border-top:1px solid var(--border);margin:1.75rem 0;}
+.bp-section-title{font-family:'Cormorant Garamond',serif;font-size:1.25rem;font-weight:600;color:var(--text-1);margin:1.75rem 0 1rem;}
+.bp-tech-box{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1.4rem;margin:1.5rem 0;}
+.bp-tech-box h3{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text-1);margin-bottom:1rem;}
+.bp-step{display:flex;gap:0.75rem;margin-bottom:0.85rem;align-items:flex-start;}
+.bp-step-num{background:var(--amber-dim);border:1px solid var(--amber-border);color:var(--amber);width:22px;min-width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:600;margin-top:2px;flex-shrink:0;}
+.bp-step-text{font-size:0.84rem;color:var(--text-2);line-height:1.65;}
+.bp-step-text strong{color:var(--text-1);font-weight:500;}
+.bp-table{width:100%;border-collapse:collapse;font-size:0.83rem;margin:1rem 0;}
+.bp-table th{text-align:left;padding:0.6rem 0.85rem;font-size:0.7rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--border);}
+.bp-table td{padding:0.6rem 0.85rem;color:var(--text-2);border-bottom:1px solid rgba(29,40,64,0.5);line-height:1.55;}
+.bp-table tr:last-child td{border-bottom:none;}
+.bp-table td strong{color:var(--text-1);font-weight:500;}
+/* Source image display */
+.bp-image-block{margin:1.75rem 0;}
+.bp-image-wrap{border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--surface-2);cursor:zoom-in;transition:border-color 0.2s;}
+.bp-image-wrap:hover{border-color:rgba(232,160,32,0.3);}
+.bp-image-wrap img{width:100%;display:block;max-height:380px;object-fit:contain;padding:1rem;background:var(--surface-2);}
+.bp-image-caption{padding:0.65rem 1rem;border-top:1px solid var(--border);font-size:0.74rem;color:var(--text-3);font-style:italic;display:flex;align-items:center;gap:0.4rem;}
+.bp-image-caption::before{content:'↑';color:var(--text-3);font-style:normal;}
+/* Lightbox */
+.lightbox{position:fixed;inset:0;background:rgba(6,9,26,0.96);z-index:600;display:none;align-items:center;justify-content:center;padding:1.5rem;cursor:zoom-out;}
+.lightbox.open{display:flex;animation:bgFade 0.2s ease;}
+.lightbox img{max-width:100%;max-height:90vh;object-fit:contain;border-radius:8px;border:1px solid var(--border);}
+.lightbox-close{position:absolute;top:1.25rem;right:1.5rem;background:none;border:none;color:var(--text-2);font-size:1.6rem;cursor:pointer;line-height:1;}
+.lightbox-hint{position:absolute;bottom:1.25rem;left:50%;transform:translateX(-50%);font-size:0.72rem;color:var(--text-3);letter-spacing:0.08em;}
+/* Recreated diagram — custom flowchart renderer (no external library) */
+.bp-diagram-block{margin:1.75rem 0;}
+.bp-diagram-label{font-size:0.68rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--amber);margin-bottom:0.75rem;display:flex;align-items:center;gap:0.4rem;}
+.bp-diagram-label::before{content:'◈';font-size:0.8rem;}
+.bp-diagram-inner{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:1.75rem 1.5rem;overflow-x:auto;}
+/* Flow diagram */
+.flow-wrap{display:flex;flex-direction:column;align-items:center;gap:0;font-family:'Outfit',sans-serif;}
+.flow-title{font-family:'Cormorant Garamond',serif;font-size:1rem;font-weight:600;color:var(--text-1);margin-bottom:1.25rem;text-align:center;}
+.flow-group{width:100%;max-width:480px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:10px;padding:1rem 1rem 0.5rem;margin-bottom:0;}
+.flow-group-label{font-size:0.65rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:0.85rem;text-align:center;}
+.flow-node{background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:0.55rem 1rem;font-size:0.82rem;color:var(--text-1);text-align:center;width:100%;line-height:1.45;}
+.flow-node.hi{background:rgba(232,160,32,0.08);border-color:rgba(232,160,32,0.4);color:var(--amber);}
+.flow-node.decision{border-radius:4px;background:rgba(96,165,250,0.07);border-color:rgba(96,165,250,0.3);color:#60a5fa;clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);padding:1rem;min-height:52px;display:flex;align-items:center;justify-content:center;}
+.flow-arrow-inner{display:flex;flex-direction:column;align-items:center;gap:0;padding:2px 0;}
+.flow-arrow-inner .fa-line{width:1.5px;height:14px;background:rgba(232,160,32,0.5);}
+.flow-arrow-inner .fa-head{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid rgba(232,160,32,0.7);}
+.flow-group-arrow{display:flex;flex-direction:column;align-items:center;padding:4px 0;}
+.flow-group-arrow .fa-line{width:1.5px;height:20px;background:rgba(232,160,32,0.35);}
+.flow-group-arrow .fa-head{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid rgba(232,160,32,0.5);}
+.flow-error{font-size:0.8rem;color:var(--text-2);font-style:italic;text-align:center;padding:1rem;}
+
+/* ── SIDE PROJECTS ───────────────────────────────────────────────────────── */
+.proj-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.25rem;}
+.proj-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.6rem;transition:border-color 0.2s;}
+.proj-card:hover{border-color:rgba(255,255,255,0.12);}
+.proj-title{font-family:'Cormorant Garamond',serif;font-size:1.15rem;font-weight:600;color:var(--text-1);margin-bottom:0.55rem;}
+.proj-desc{font-size:0.82rem;color:var(--text-2);line-height:1.65;margin-bottom:1rem;}
+.proj-tools{display:flex;flex-wrap:wrap;gap:0.35rem;}
+.p-tool{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);padding:0.15rem 0.5rem;border-radius:4px;font-size:0.68rem;}
+
+/* ── BLOG ────────────────────────────────────────────────────────────────── */
+/* Two-column split: Knowledge (left) | Life (right) */
+.blog-cols{display:grid;grid-template-columns:1fr 1fr;gap:2.5rem;margin-bottom:2.5rem;align-items:start;}
+@media(max-width:780px){.blog-cols{grid-template-columns:1fr;gap:2rem;}}
+
+/* Column headers — each has its own identity */
+.blog-col-head{margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border);}
+.blog-col-label{font-size:0.68rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;margin-bottom:0.3rem;}
+.blog-col-label.knowledge{color:#60A5FA;}   /* blue = structured, reference */
+.blog-col-label.life{color:var(--amber);}   /* amber = personal, human */
+.blog-col-title{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-weight:600;color:var(--text-1);margin-bottom:0.25rem;}
+.blog-col-desc{font-size:0.78rem;color:var(--text-3);line-height:1.55;}
+
+/* Cards — slightly different feel per column */
+.blog-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.4rem;position:relative;overflow:hidden;transition:border-color 0.2s,transform 0.2s;cursor:pointer;margin-bottom:1rem;}
+.blog-card:last-child{margin-bottom:0;}
+.blog-card:hover{transform:translateY(-2px);}
+.knowledge-col .blog-card:hover{border-color:rgba(96,165,250,0.3);}
+.life-col .blog-card:hover{border-color:rgba(232,160,32,0.3);}
+
+.blog-meta{display:flex;align-items:center;gap:0.35rem;flex-wrap:wrap;margin-bottom:0.85rem;}
+.b-tag{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-2);padding:0.14rem 0.48rem;border-radius:4px;font-size:0.66rem;}
+.b-time{color:var(--text-3);font-size:0.66rem;margin-left:auto;}
+.b-title{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--text-1);margin-bottom:0.5rem;line-height:1.4;}
+.b-teaser{font-size:0.79rem;color:var(--text-2);line-height:1.65;margin-bottom:0.85rem;}
+.b-read{font-size:0.74rem;font-weight:600;}
+.knowledge-col .b-read{color:#60A5FA;}
+.life-col .b-read{color:var(--amber);}
+.b-source-badge{background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.18);color:var(--text-3);padding:0.12rem 0.45rem;border-radius:4px;font-size:0.62rem;margin-left:auto;white-space:nowrap;flex-shrink:0;}
+.b-gate{position:absolute;inset:0;background:linear-gradient(to top,rgba(13,18,37,0.97) 50%,transparent);display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:1.25rem;gap:0.3rem;text-align:center;}
+.b-gate-btn{background:var(--amber);color:var(--bg);border:none;padding:0.48rem 1.25rem;border-radius:5px;font-size:0.75rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;margin-top:0.25rem;transition:opacity 0.15s;}
+.b-gate-btn:hover{opacity:0.88;}
+
+/* Subscribe box */
+.sub-box{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:2.5rem;text-align:center;}
+.sub-title{font-family:'Cormorant Garamond',serif;font-size:1.55rem;font-weight:600;color:var(--text-1);margin-bottom:0.5rem;}
+.sub-copy{font-size:0.86rem;color:var(--text-2);margin-bottom:1.5rem;line-height:1.65;}
+.sub-row{display:flex;gap:0.65rem;justify-content:center;flex-wrap:wrap;}
+.sub-input{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text-1);padding:0.68rem 1.15rem;border-radius:6px;font-size:0.86rem;font-family:'Outfit',sans-serif;width:270px;outline:none;transition:border-color 0.15s;}
+.sub-input:focus{border-color:rgba(232,160,32,0.4);}
+.sub-input::placeholder{color:var(--text-3);}
+.sub-btn{background:var(--amber);color:var(--bg);border:none;padding:0.68rem 1.4rem;border-radius:6px;font-weight:600;font-size:0.86rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.15s;}
+.sub-btn:hover{opacity:0.88;}
+
+/* ── OFFERINGS ───────────────────────────────────────────────────────────── */
+.off-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.25rem;margin-bottom:2.5rem;}
+.off-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.85rem;transition:border-color 0.2s;}
+.off-card:hover{border-color:rgba(255,255,255,0.1);}
+.off-icon{font-size:1.65rem;margin-bottom:0.85rem;}
+.off-title{font-family:'Cormorant Garamond',serif;font-size:1.1rem;font-weight:600;color:var(--text-1);margin-bottom:0.5rem;}
+.off-copy{font-size:0.8rem;color:var(--text-2);line-height:1.65;margin-bottom:1.35rem;}
+.off-btn{width:100%;border:1px solid var(--amber-border);color:var(--amber);background:var(--amber-dim);padding:0.5rem 1rem;border-radius:6px;font-size:0.78rem;font-weight:600;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s;}
+.off-btn:hover{background:rgba(232,160,32,0.18);}
+.otw{background:var(--amber-dim);border:1px solid var(--amber-border);border-radius:10px;padding:1.35rem 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;max-width:500px;margin:0 auto;}
+.otw-text{font-size:0.86rem;color:var(--text-1);}
+.otw-text strong{color:var(--amber);}
+.otw-link{color:var(--amber);font-size:0.82rem;text-decoration:none;font-weight:500;}
+.otw-link:hover{text-decoration:underline;}
+
+/* ── FOOTER ──────────────────────────────────────────────────────────────── */
+footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;}
+.ft-quote{font-family:'Cormorant Garamond',serif;font-size:0.9rem;font-style:italic;color:var(--text-3);margin-bottom:1.35rem;}
+.ft-links{display:flex;gap:2rem;justify-content:center;margin-bottom:1.1rem;}
+.ft-links a{color:var(--text-2);font-size:0.8rem;text-decoration:none;transition:color 0.15s;}
+.ft-links a:hover{color:var(--amber);}
+.ft-copy{color:var(--text-3);font-size:0.7rem;}
+
+/* ── /DUMP TOOL ──────────────────────────────────────────────────────────── */
+#dump-page{display:none;position:fixed;inset:0;background:#06080F;z-index:500;overflow-y:auto;}
+#dump-page.active{display:block;}
+.dump-nav{display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;border-bottom:1px solid #141e30;}
+.dump-nav-logo{font-family:'Cormorant Garamond',serif;color:var(--amber);font-size:1rem;font-weight:600;letter-spacing:0.06em;}
+.dump-back{background:none;border:1px solid #1e2d40;color:var(--text-2);padding:0.38rem 0.9rem;border-radius:5px;font-size:0.75rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:color 0.15s,border-color 0.15s;}
+.dump-back:hover{color:var(--text-1);border-color:#2e3d50;}
+.dump-inner{max-width:760px;margin:0 auto;padding:3rem 2rem 5rem;}
+.dump-heading{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--text-1);margin-bottom:0.5rem;}
+.dump-sub{font-size:0.86rem;color:var(--text-2);margin-bottom:1.75rem;line-height:1.65;}
+/* Provider + model selector */
+.provider-row{display:flex;gap:0.5rem;margin-bottom:1.25rem;}
+.provider-btn{flex:1;background:#0a0e1c;border:1px solid #1a2540;color:var(--text-2);padding:0.6rem 1rem;border-radius:7px;font-size:0.82rem;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;text-align:center;}
+.provider-btn:hover{border-color:#2e3d50;color:var(--text-1);}
+.provider-btn.active{border-color:var(--amber-border);color:var(--amber);background:var(--amber-dim);}
+.provider-btn .pb-name{display:block;font-weight:600;font-size:0.85rem;margin-bottom:0.2rem;}
+.provider-btn .pb-desc{display:block;font-size:0.7rem;color:inherit;opacity:0.7;}
+.model-row{display:flex;gap:0.5rem;margin-bottom:2rem;flex-wrap:wrap;}
+.model-btn{flex:1;min-width:140px;background:#0a0e1c;border:1px solid #1a2540;color:var(--text-2);padding:0.55rem 0.85rem;border-radius:6px;font-size:0.76rem;font-weight:500;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;text-align:left;}
+.model-btn:hover{border-color:#2e3d50;color:var(--text-1);}
+.model-btn.active{border-color:var(--amber-border);color:var(--amber);background:var(--amber-dim);}
+.model-btn .mb-name{display:block;font-weight:600;font-size:0.78rem;margin-bottom:0.18rem;}
+.model-btn .mb-badge{display:inline-block;font-size:0.62rem;padding:0.1rem 0.4rem;border-radius:3px;margin-bottom:0.18rem;}
+.model-btn .mb-badge.best{background:rgba(52,211,153,0.1);color:#34d399;}
+.model-btn .mb-badge.pro{background:rgba(232,160,32,0.12);color:#E8A020;}
+.model-btn .mb-badge.mid{background:rgba(96,165,250,0.1);color:#60a5fa;}
+.model-btn .mb-badge.stable{background:rgba(139,92,246,0.1);color:#8b5cf6;}
+.model-btn .mb-desc{display:block;font-size:0.68rem;color:var(--text-3);line-height:1.4;}
+.dump-label{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:0.65rem;display:block;}
+.dump-textarea{width:100%;background:#0a0e1c;border:1px solid #1a2540;border-radius:8px;color:var(--text-1);font-size:0.9rem;font-family:'Outfit',sans-serif;line-height:1.75;padding:1.25rem;min-height:200px;resize:vertical;outline:none;transition:border-color 0.15s;margin-bottom:1.5rem;}
+.dump-textarea:focus{border-color:rgba(232,160,32,0.35);}
+.dump-textarea::placeholder{color:#3a4d6a;}
+.dump-tags{display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;}
+.dump-tag{background:#0a0e1c;border:1px solid #1a2540;color:var(--text-2);padding:0.38rem 0.85rem;border-radius:100px;font-size:0.76rem;cursor:pointer;transition:all 0.15s;font-family:'Outfit',sans-serif;}
+.dump-tag.selected{background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber);}
+.dump-process-btn{background:var(--amber);color:var(--bg);border:none;padding:0.85rem 2rem;border-radius:6px;font-weight:600;font-size:0.92rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.15s,transform 0.15s;display:flex;align-items:center;gap:0.6rem;}
+.dump-process-btn:hover{opacity:0.9;transform:translateY(-1px);}
+.dump-process-btn:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+/* Preview panel */
+.dump-preview{display:none;margin-top:2.5rem;border-top:1px solid #141e30;padding-top:2rem;}
+.dump-preview.show{display:block;}
+.dump-preview-label{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:1.5rem;}
+.dump-field{margin-bottom:1.25rem;}
+.dump-field label{font-size:0.72rem;color:var(--text-2);display:block;margin-bottom:0.4rem;}
+.dump-field-input{width:100%;background:#0a0e1c;border:1px solid #1a2540;color:var(--text-1);font-size:0.88rem;font-family:'Outfit',sans-serif;padding:0.65rem 0.9rem;border-radius:6px;outline:none;transition:border-color 0.15s;}
+.dump-field-input:focus{border-color:rgba(232,160,32,0.35);}
+.dump-field-textarea{width:100%;background:#0a0e1c;border:1px solid #1a2540;color:var(--text-1);font-size:0.86rem;font-family:'Outfit',sans-serif;line-height:1.75;padding:0.85rem 0.9rem;border-radius:6px;min-height:140px;resize:vertical;outline:none;transition:border-color 0.15s;}
+.dump-field-textarea:focus{border-color:rgba(232,160,32,0.35);}
+.dump-preview-actions{display:flex;gap:0.75rem;margin-top:2rem;flex-wrap:wrap;}
+.dump-publish-btn{background:var(--amber);color:var(--bg);border:none;padding:0.78rem 1.75rem;border-radius:6px;font-weight:600;font-size:0.88rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.15s;}
+.dump-publish-btn:hover{opacity:0.88;}
+.dump-discard-btn{background:none;border:1px solid #1a2540;color:var(--text-2);padding:0.78rem 1.25rem;border-radius:6px;font-size:0.88rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:color 0.15s,border-color 0.15s;}
+.dump-discard-btn:hover{color:var(--text-1);border-color:#2e3d50;}
+.dump-status{font-size:0.82rem;color:var(--text-2);margin-top:0.75rem;min-height:1.2rem;}
+.dump-status.success{color:var(--green);}
+.dump-status.error{color:#f87171;}
+/* Spinner */
+.spinner{width:16px;height:16px;border:2px solid rgba(8,12,26,0.3);border-top-color:var(--bg);border-radius:50%;animation:spin 0.7s linear infinite;flex-shrink:0;}
+@keyframes spin{to{transform:rotate(360deg);}}
+/* Published posts list in dump */
+.dump-posts-section{margin-top:3rem;border-top:1px solid #141e30;padding-top:2rem;}
+.dump-post-row{display:flex;justify-content:space-between;align-items:center;padding:0.85rem 1rem;background:#0a0e1c;border:1px solid #1a2540;border-radius:8px;margin-bottom:0.6rem;gap:1rem;flex-wrap:wrap;}
+.dump-post-title-sm{font-size:0.86rem;color:var(--text-1);}
+.dump-delete-btn{background:none;border:1px solid #1e2d40;color:#f87171;padding:0.25rem 0.65rem;border-radius:4px;font-size:0.7rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s;flex-shrink:0;}
+.dump-delete-btn:hover{background:rgba(248,113,113,0.1);}
+.dump-cat-btn{background:#0a0e1c;border:1px solid #1a2540;color:var(--text-2);padding:0.45rem 1rem;border-radius:6px;font-size:0.8rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.15s;}
+.dump-cat-btn.selected{background:var(--amber-dim);border-color:var(--amber-border);color:var(--amber);font-weight:600;}
+.dump-cat-btn:not(.selected):hover{border-color:#2e3d50;color:var(--text-1);}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:translateY(0);}}
+.ham-btn{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:201;}
+.ham-btn span{display:block;width:22px;height:2px;background:var(--text-1);border-radius:2px;transition:transform 0.25s,opacity 0.25s;}
+.ham-btn.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.ham-btn.open span:nth-child(2){opacity:0;}
+.ham-btn.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:rgba(8,12,26,0.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);z-index:199;flex-direction:column;padding:1rem 1.5rem 1.5rem;}
+.mobile-menu.open{display:flex;}
+.mobile-menu a{color:var(--text-2);font-size:0.9rem;font-weight:500;text-decoration:none;padding:0.75rem 0;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:0.1em;transition:color 0.15s;}
+.mobile-menu a:last-child{border-bottom:none;}
+.mobile-menu a:hover{color:var(--amber);}
+.mobile-menu .m-cta{margin-top:0.75rem;background:var(--amber);color:var(--bg);padding:0.7rem 1.2rem;border-radius:6px;text-align:center;font-weight:600;font-size:0.85rem;border-bottom:none !important;}
+@media(max-width:680px){
+  nav{padding:0 1.25rem;}
+  .nav-links a:not(.nav-cta){display:none;}
+  .ham-btn{display:flex;}
+  .hero-name{font-size:clamp(3rem,14vw,5rem);}
+  .sec{padding:4rem 1.25rem;}
+  .dump-inner{padding:2rem 1.25rem 4rem;}
+}
+
+
+/* ── QUADRANT NAV STRIP ──────────────────────────────────────────────────── */
+.hero-top{flex:1;display:flex;align-items:center;justify-content:center;padding:5rem 2rem 2rem;position:relative;z-index:1;}
+.hero-quads{display:grid;grid-template-columns:repeat(4,1fr);height:200px;position:relative;z-index:2;flex-shrink:0;}
+.hq{position:relative;overflow:hidden;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:flex 0.5s cubic-bezier(0.4,0,0.2,1);border-top:1px solid rgba(255,255,255,0.06);text-decoration:none;}
+.hq::before{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.35s;}
+.hq:hover::before{opacity:1;}
+.hq-0::before{background:linear-gradient(135deg,rgba(232,160,32,0.14) 0%,transparent 70%);}
+.hq-1::before{background:linear-gradient(135deg,rgba(96,165,250,0.14) 0%,transparent 70%);}
+.hq-2::before{background:linear-gradient(135deg,rgba(52,211,153,0.14) 0%,transparent 70%);}
+.hq-3::before{background:linear-gradient(135deg,rgba(167,139,250,0.14) 0%,transparent 70%);}
+.hq+.hq{border-left:1px solid rgba(255,255,255,0.06);}
+.hq-num{position:absolute;top:18px;left:50%;transform:translateX(-50%);font-size:0.65rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;opacity:0.3;transition:opacity 0.25s;font-family:'Outfit',sans-serif;white-space:nowrap;z-index:2;}
+.hq-title{font-family:'Cormorant Garamond',serif;font-size:clamp(1.5rem,3.5vw,2.2rem);font-weight:600;color:#EDE8DC;letter-spacing:-0.01em;transition:color 0.25s,transform 0.35s;position:relative;z-index:2;}
+.hq-sub{position:absolute;top:58%;left:0;right:0;font-family:'Outfit',sans-serif;font-size:0.69rem;color:rgba(238,232,220,0.72);letter-spacing:0.04em;text-transform:uppercase;text-align:center;line-height:1.45;padding:0 0.75rem;opacity:0;transition:opacity 0.3s;max-height:52px;overflow:hidden;}
+.hq-arrow{position:absolute;bottom:18px;right:22px;font-size:1.1rem;opacity:0;transform:translateX(-6px);transition:opacity 0.25s,transform 0.25s;}
+.hq:hover .hq-num{opacity:0.7;}
+.hq:hover .hq-title{transform:translateY(-2px);}
+.hq-0:hover .hq-title{color:#E8A020;}
+.hq-1:hover .hq-title{color:#60A5FA;}
+.hq-2:hover .hq-title{color:#34D399;}
+.hq-3:hover .hq-title{color:#A78BFA;}
+.hq:hover .hq-sub{opacity:1;}
+.hq:hover .hq-arrow{opacity:1;transform:translateX(0);}
+/* Subtle top border glow on hover */
+.hq-0:hover{border-top-color:rgba(232,160,32,0.5);}
+.hq-1:hover{border-top-color:rgba(96,165,250,0.5);}
+.hq-2:hover{border-top-color:rgba(52,211,153,0.5);}
+.hq-3:hover{border-top-color:rgba(167,139,250,0.5);}
+/* Active press */
+.hq:active{transform:scaleY(0.97);}
+/* Mobile — 2x2 grid */
+@media(max-width:680px){
+  .hero-quads{grid-template-columns:1fr 1fr;height:auto;}
+  .hq{height:120px;padding:1rem;}
+  .hq+.hq{border-left:none;}
+  .hq:nth-child(2),.hq:nth-child(4){border-left:1px solid rgba(255,255,255,0.06);}
+  .hq:nth-child(3),.hq:nth-child(4){border-top:1px solid rgba(255,255,255,0.06);}
+  .hq-sub{display:none;}
+  .hq-title{font-size:1.3rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  MAIN PORTFOLIO                                                         -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<nav>
+  <span class="nav-brand">Prashant Singh</span>
+  <div class="nav-links">
+    <a href="#journey">Journey</a>
+    <a href="#work">Work</a>
+    <a href="#blog">Blog</a>
+    <a href="#connect">Connect</a>
+    <a href="#" class="nav-cta">Download CV</a>
+  </div>
+  <button class="ham-btn" id="ham-btn" aria-label="Menu" onclick="toggleMenu()">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#journey" onclick="closeMenu()">Journey</a>
+  <a href="#work"    onclick="closeMenu()">Work</a>
+  <a href="#blog"    onclick="closeMenu()">Blog</a>
+  <a href="#connect" onclick="closeMenu()">Connect</a>
+  <a href="#" class="m-cta" onclick="closeMenu()">Download CV</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <canvas id="hero-canvas"></canvas>
+
+  <!-- TOP ZONE: particle field + name + bio -->
+  <div class="hero-top">
+    <div class="hero-inner" id="hero3d">
+      <div class="hero-role">
+        <span class="role-chip">Product Manager</span>
+        <span class="role-chip">Fintech</span>
+        <span class="role-chip">AI</span>
+      </div>
+      <h1 class="hero-name" id="hero-name"></h1>
+      <p class="hero-bio">~5 years building across services, e-commerce, fintech, and logistics. <strong>Now at Delhivery</strong> as Data Science PM. Previously shipped AI-powered credit card flows at Zeta. Hands on LLMs, intent classification, and the reality of product at scale.</p>
+      <p class="hero-arc" id="hero-arc"></p>
+    </div>
+  </div>
+
+  <!-- BOTTOM ZONE: quadrant section navigation -->
+  <div class="hero-quads">
+    <a href="#journey" class="hq hq-0">
+      <span class="hq-num">01</span>
+      <span class="hq-title">Journey</span>
+      <span class="hq-sub">~5 years · Engineer → UPSC aspirant → Business growth → AI Product</span>
+      <span class="hq-arrow">→</span>
+    </a>
+    <a href="#work" class="hq hq-1">
+      <span class="hq-num">02</span>
+      <span class="hq-title">Work</span>
+      <span class="hq-sub" id="hq-work-sub"><span id="hq-cs-count">5</span> PM case studies<br>B2C Services · E-Commerce · Fintech · Logistics</span>
+      <span class="hq-arrow">→</span>
+    </a>
+    <a href="#blog" class="hq hq-2">
+      <span class="hq-num">03</span>
+      <span class="hq-title">Blog</span>
+      <span class="hq-sub" id="hq-blog-sub"><span id="hq-blog-count">5</span> posts<br>Knowledge · Life</span>
+      <span class="hq-arrow">→</span>
+    </a>
+    <a href="#connect" class="hq hq-3">
+      <span class="hq-num">04</span>
+      <span class="hq-title">Connect</span>
+      <span class="hq-sub">Mentoring · Consulting<br>Let’s build something</span>
+      <span class="hq-arrow">→</span>
+    </a>
+  </div>
+</section>
+
+<!-- JOURNEY -->
+<section class="sec alt" id="journey">
+  <div class="wrap-sm">
+    <p class="sec-label">The path here</p>
+    <h2 class="sec-title">My Journey</h2>
+    <div class="tl">
+      <div class="tl-spine"></div>
+      <div class="tl-row">
+        <div class="tl-node now"></div>
+        <div class="tl-card now-card">
+          <div class="tl-head"><span class="tl-period">Jun 2026 &ndash; Present</span><span class="tl-here">You are here</span></div>
+          <p class="tl-co">Delhivery</p>
+          <p class="tl-role">Data Science Product Manager</p>
+          <p class="tl-hi">Embedded within the data science team &middot; Logistics &middot; AI-driven product decisions</p>
+          <p class="tl-learn">Moving from fintech to logistics &mdash; same instinct, new domain. Data science at the core of every product decision.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-node"></div>
+        <div class="tl-card">
+          <div class="tl-head"><span class="tl-period">Jun 2024 &ndash; May 2026</span></div>
+          <p class="tl-co">Zeta (HDFC Pixel)</p>
+          <p class="tl-role">Associate PM &rarr; Product Manager, Credit Card</p>
+          <p class="tl-hi">AI card closure flows &middot; RBI compliance &middot; NPA accounting &middot; Activation uplift &middot; Shining Star Award</p>
+          <p class="tl-learn">Fintech is where product, compliance, and user trust all intersect &mdash; and where you learn to hold all three at once without dropping any.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-node"></div>
+        <div class="tl-card">
+          <div class="tl-head"><span class="tl-period">Feb 2023 &ndash; May 2024</span></div>
+          <p class="tl-co">Purplle</p>
+          <p class="tl-role">Product Analyst &rarr; Associate Product Manager</p>
+          <p class="tl-hi">AOV up ~&thinsp;&thinsp;&#8377;100 &middot; Install conversion 4.5%&rarr;6% &middot; Sale downtime 6&ndash;7hrs&rarr;&lt;20 mins &middot; Spot Award</p>
+          <p class="tl-learn">A/B testing is humbling. Your best ideas are often wrong. The data will tell you every time &mdash; if you're willing to look.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-node"></div>
+        <div class="tl-card">
+          <div class="tl-head"><span class="tl-period">Dec 2021 &ndash; Feb 2023</span></div>
+          <p class="tl-co">Urban Company</p>
+          <p class="tl-role">Business Dev Associate &rarr; Category Manager</p>
+          <p class="tl-hi">Promoted in ~5 months &middot; Owned 60% of India&rsquo;s RO business &middot; Heavy Lifter Award</p>
+          <p class="tl-learn">Operations teaches you what metrics actually mean &mdash; and how fast things break without a system behind them.</p>
+        </div>
+      </div>
+      <div class="tl-row">
+        <div class="tl-node"></div>
+        <div class="tl-card" onclick="toggleEaster(this)">
+          <div class="tl-head"><span class="tl-period">2015&ndash;2019</span></div>
+          <p class="tl-co">VIT Vellore</p>
+          <p class="tl-role">B.Tech, Mechanical Engineering</p>
+          <p class="tl-hi">CGPA 9.52 &middot; Batch Rank 3/800 &middot; 2nd in Sales, BAJA SAE Illinois USA &nbsp;<span style="color:var(--amber);font-size:0.72rem;">(tap)</span></p>
+          <div class="tl-easter">Rank 3/800. Yes, he&rsquo;s that guy. 🎯</div>
+          <p class="tl-learn">Learned to love systems, constraints, and first-principles thinking. After graduating, spent time preparing for the UPSC civil services exam — a period that built mental discipline, structured thinking, and comfort with ambiguous, high-stakes problems. Engineering and that grind never really leave you.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDIES -->
+<section class="sec" id="work">
+  <div class="wrap">
+    <p class="sec-label">What I've shipped</p>
+    <h2 class="sec-title">PM Case Studies</h2>
+    <div class="cs-grid">
+      <div class="cs-card" onclick="openCS('cbr')" onmouseenter="this.style.borderColor='rgba(232,160,32,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div class="cs-top"><span class="cs-tag" style="background:rgba(232,160,32,0.1);color:#E8A020;">Ops · Automation</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
+        <h3 class="cs-title">CBR Automation</h3>
+        <p class="cs-prob">Refund TAT of 2–3 days — ~150 CX tickets every week and mounting compliance risk.</p>
+        <div class="cs-wins">
+          <div class="cs-win"><div class="win-dot" style="background:#E8A020;"></div>TAT: 2–3 days → Instant</div>
+          <div class="cs-win"><div class="win-dot" style="background:#E8A020;"></div>~150 CX tickets/week eliminated</div>
+          <div class="cs-win"><div class="win-dot" style="background:#E8A020;"></div>RBI-compliant self-serve</div>
+        </div>
+        <span class="cs-cta" style="color:#E8A020;">Read case study →</span>
+      </div>
+      <div class="cs-card" onclick="openCS('nlp')" onmouseenter="this.style.borderColor='rgba(96,165,250,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div class="cs-top"><span class="cs-tag" style="background:rgba(96,165,250,0.1);color:#60A5FA;">AI · Retention</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
+        <h3 class="cs-title">AI-Powered Card Closure</h3>
+        <p class="cs-prob">Manual ops bottleneck — every closure request routed identically regardless of user intent.</p>
+        <div class="cs-wins">
+          <div class="cs-win"><div class="win-dot" style="background:#60A5FA;"></div>~40% reduction in manual ops</div>
+          <div class="cs-win"><div class="win-dot" style="background:#60A5FA;"></div>~200 agent-hours/month saved</div>
+          <div class="cs-win"><div class="win-dot" style="background:#60A5FA;"></div>+15% closure-avoidance rate</div>
+        </div>
+        <span class="cs-cta" style="color:#60A5FA;">Read case study →</span>
+      </div>
+      <div class="cs-card" onclick="openCS('rbi')" onmouseenter="this.style.borderColor='rgba(52,211,153,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div class="cs-top"><span class="cs-tag" style="background:rgba(52,211,153,0.1);color:#34D399;">Compliance · Growth</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
+        <h3 class="cs-title">RBI Activation Uplift</h3>
+        <p class="cs-prob">Activation stuck at 92–93% — a critical bug hiding in J3 flows, at ~32K cards/month.</p>
+        <div class="cs-wins">
+          <div class="cs-win"><div class="win-dot" style="background:#34D399;"></div>Activation: 92–93% → 96–97%</div>
+          <div class="cs-win"><div class="win-dot" style="background:#34D399;"></div>~32K cards/month impacted</div>
+          <div class="cs-win"><div class="win-dot" style="background:#34D399;"></div>~1K reactivations in 2.5 months</div>
+        </div>
+        <span class="cs-cta" style="color:#34D399;">Read case study →</span>
+      </div>
+      <div class="cs-card" onclick="openCS('purplle')" onmouseenter="this.style.borderColor='rgba(251,146,60,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div class="cs-top"><span class="cs-tag" style="background:rgba(251,146,60,0.1);color:#FB923C;">Growth · E-commerce</span><span class="cs-co">Purplle</span></div>
+        <h3 class="cs-title">Storefront Growth</h3>
+        <p class="cs-prob">Low AOV, high OOS rates, weak install conversion and painful sale-day downtime.</p>
+        <div class="cs-wins">
+          <div class="cs-win"><div class="win-dot" style="background:#FB923C;"></div>AOV up ~₹100, no conversion drop</div>
+          <div class="cs-win"><div class="win-dot" style="background:#FB923C;"></div>Install conversion: 4.5% → 6%</div>
+          <div class="cs-win"><div class="win-dot" style="background:#FB923C;"></div>Downtime: 6–7hrs → &lt;20 mins</div>
+        </div>
+        <span class="cs-cta" style="color:#FB923C;">Read case study →</span>
+      </div>
+      <div class="cs-card" onclick="openCS('npa')" onmouseenter="this.style.borderColor='rgba(167,139,250,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
+        <div class="cs-top"><span class="cs-tag" style="background:rgba(167,139,250,0.1);color:#A78BFA;">Fintech · Infrastructure</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
+        <h3 class="cs-title">0→1 NPA Accounting</h3>
+        <p class="cs-prob">No accounting system for ₹29Cr NPA and ₹9Cr write-offs/month — blocking RBI rollout.</p>
+        <div class="cs-wins">
+          <div class="cs-win"><div class="win-dot" style="background:#A78BFA;"></div>₹29Cr NPA tracked end-to-end</div>
+          <div class="cs-win"><div class="win-dot" style="background:#A78BFA;"></div>₹9Cr write-offs/month automated</div>
+          <div class="cs-win"><div class="win-dot" style="background:#A78BFA;"></div>Phased RBI rollout unblocked</div>
+        </div>
+        <span class="cs-cta" style="color:#A78BFA;">Read case study →</span>
+      </div>
+      <div class="cs-locked">
+        <div style="font-size:1.75rem;margin-bottom:0.25rem;">🔒</div>
+        <p style="font-family:'Cormorant Garamond',serif;color:var(--text-3);font-size:1rem;font-style:italic;">AI PM Case Study</p>
+        <p style="color:var(--text-3);font-size:0.74rem;margin-top:0.2rem;">Coming soon</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY MODAL -->
+<div class="modal-bg" id="cs-modal" onclick="closeCS()">
+  <div class="modal-box" id="cs-box" onclick="event.stopPropagation()">
+    <button class="modal-x" onclick="closeCS()">×</button>
+    <span class="m-tag" id="cs-tag"></span>
+    <h2 class="m-title" id="cs-title"></h2>
+    <div id="cs-body"></div>
+  </div>
+</div>
+
+<!-- BLOG POST MODAL -->
+<div class="modal-bg" id="bp-modal" onclick="closeBP()">
+  <div class="modal-box" id="bp-box" style="max-width:680px;" onclick="event.stopPropagation()">
+    <button class="modal-x" onclick="closeBP()">×</button>
+    <div id="bp-body"></div>
+  </div>
+</div>
+
+<!-- BLOG -->
+<section class="sec" id="blog">
+  <div class="wrap">
+    <p class="sec-label">Writing & reflections</p>
+    <h2 class="sec-title" style="margin-bottom:0.4rem;">Things I've figured out</h2>
+    <p style="color:var(--text-2);font-size:0.88rem;margin-bottom:3rem;font-style:italic;">(and some I'm still figuring out)</p>
+
+    <div class="blog-cols">
+      <!-- KNOWLEDGE column -->
+      <div class="knowledge-col">
+        <div class="blog-col-head">
+          <p class="blog-col-label knowledge">Knowledge</p>
+          <h3 class="blog-col-title">How things work</h3>
+          <p class="blog-col-desc">Product management, fintech, AI, economics, internet — explained from first principles, not press releases.</p>
+        </div>
+        <div id="blog-knowledge"></div>
+      </div>
+
+      <!-- LIFE column -->
+      <div class="life-col">
+        <div class="blog-col-head">
+          <p class="blog-col-label life">Life</p>
+          <h3 class="blog-col-title">How I think</h3>
+          <p class="blog-col-desc">Career, decisions, philosophy, the journey from engineer to PM to whatever comes next.</p>
+        </div>
+        <div id="blog-life"></div>
+      </div>
+    </div>
+
+    <div class="sub-box">
+      <h3 class="sub-title">Get my notes</h3>
+      <p class="sub-copy">Knowledge and life, delivered together.<br>No noise — just things worth reading.</p>
+      <div class="sub-row">
+        <input id="subscribe-input" class="sub-input" placeholder="your@email.com" type="email"/>
+        <button class="sub-btn">Subscribe</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONNECT -->
+<section class="sec alt" id="connect">
+  <div class="wrap" style="text-align:center;">
+    <p class="sec-label">Future</p>
+    <h2 class="sec-title" style="margin-bottom:0.5rem;">Let's build something</h2>
+    <p style="color:var(--text-2);font-size:0.88rem;margin-bottom:3rem;">Things I'm working toward offering. Join the waitlist and be first to know.</p>
+    <div class="off-grid">
+      <div class="off-card">
+        <div class="off-icon">👥</div>
+        <h3 class="off-title">PM Mentoring</h3>
+        <p class="off-copy">1:1 for engineers and analysts breaking into product. Story, case studies, and a real transition plan — worked through properly.</p>
+        <button class="off-btn">Join waitlist</button>
+      </div>
+      <div class="off-card">
+        <div class="off-icon">📋</div>
+        <h3 class="off-title">AI PM Playbooks</h3>
+        <p class="off-copy">Frameworks, prompts, and templates for PMs building with LLMs. Everything from shipping AI flows at Zeta — packaged and ready to use.</p>
+        <button class="off-btn">Join waitlist</button>
+      </div>
+      <div class="off-card">
+        <div class="off-icon">⚡</div>
+        <h3 class="off-title">Startup Consulting</h3>
+        <p class="off-copy">For teams navigating 0→1 product, growth loops, or fintech compliance. Build the right thing — not just fast.</p>
+        <button class="off-btn">Join waitlist</button>
+      </div>
+    </div>
+    <div class="otw">
+      <p class="otw-text">🟢 <strong>Open to opportunities</strong> — AI PM and fintech product roles</p>
+      <a href="mailto:prashant8895@gmail.com" class="otw-link">prashant8895@gmail.com →</a>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightbox-img" src="" alt=""/>
+  <p class="lightbox-hint">Click anywhere to close · ESC to exit</p>
+</div>
+
+<footer>
+  <p class="ft-quote">"Built by Prashant — ex-engineer, current PM, forever curious."</p>
+  <div class="ft-links">
+    <a href="#">LinkedIn</a><a href="#">GitHub</a>
+    <a href="mailto:prashant8895@gmail.com">Email</a>
+  </div>
+  <p class="ft-copy">© 2025 Prashant Singh · Open to AI PM and fintech product roles</p>
+</footer>
+
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<!--  /DUMP TOOL  (access via URL hash: #dump)                               -->
+<!-- ═══════════════════════════════════════════════════════════════════════ -->
+<div id="dump-page">
+  <div class="dump-nav">
+    <span class="dump-nav-logo">⚡ Content Engine</span>
+    <button class="dump-back" onclick="exitDump()">← Back to portfolio</button>
+  </div>
+  <div class="dump-inner">
+    <h1 class="dump-heading">Paste your brain dump</h1>
+    <p class="dump-sub">Choose a provider, pick a model, paste your notes. Gemini and Groq are both free — switch if one hits a quota limit.</p>
+
+    <!-- Provider selector -->
+    <label class="dump-label" style="margin-bottom:0.5rem;">AI Provider</label>
+    <div class="provider-row">
+      <button class="provider-btn active" id="prov-gemini" onclick="selectProvider('gemini')">
+        <span class="pb-name">Google Gemini</span>
+        <span class="pb-desc">Best quality · JSON mode · Free on AI Studio</span>
+      </button>
+      <button class="provider-btn" id="prov-groq" onclick="selectProvider('groq')">
+        <span class="pb-name">Groq / Llama</span>
+        <span class="pb-desc">Very fast · High free quota · Open source models</span>
+      </button>
+    </div>
+
+    <!-- Model selector — updates based on provider -->
+    <label class="dump-label" style="margin-bottom:0.5rem;">Model</label>
+    <div class="model-row" id="model-row"></div>
+
+    <label class="dump-label">Your raw notes</label>
+    <textarea id="dump-input" class="dump-textarea" placeholder="Paste anything here — a half-written thought, a post-meeting reflection, a rough outline, a voice transcript. No need to clean it up first."></textarea>
+
+    <label class="dump-label" style="margin-bottom:0.5rem;">Attach a diagram or image <span style="color:var(--text-3);font-weight:400;">(optional — flowcharts, screenshots, sketches)</span></label>
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.75rem;">
+      <input type="file" id="dump-image" accept="image/*" style="font-size:0.8rem;color:var(--text-2);background:#0a0e1c;border:1px solid #1a2540;border-radius:6px;padding:0.5rem 0.75rem;cursor:pointer;flex:1;outline:none;font-family:'Outfit',sans-serif;"/>
+      <button id="clear-img-btn" onclick="document.getElementById('dump-image').value='';this.style.display='none';" style="display:none;background:none;border:1px solid #1a2540;color:var(--text-3);padding:0.4rem 0.75rem;border-radius:5px;font-size:0.74rem;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;">Clear</button>
+    </div>
+    <p style="font-size:0.72rem;color:var(--text-3);margin-top:-1.25rem;margin-bottom:1.75rem;">When an image is attached, the AI reads it and incorporates what it shows — including a recreated diagram.</p>
+
+    <label class="dump-label" style="margin-bottom:0.5rem;">What kind of thought is this?</label>
+    <div class="dump-tags" id="dump-tags">
+      <button class="dump-tag selected" data-tag="Project Retrospective">Project Retrospective</button>
+      <button class="dump-tag" data-tag="Career Reflection">Career Reflection</button>
+      <button class="dump-tag" data-tag="AI / Product">AI / Product</button>
+      <button class="dump-tag" data-tag="Fintech Insight">Fintech Insight</button>
+      <button class="dump-tag" data-tag="Quick Thought">Quick Thought</button>
+      <button class="dump-tag" data-tag="Book / Article Reaction">Book / Article Reaction</button>
+    </div>
+
+    <button class="dump-process-btn" id="dump-btn" onclick="processDump()">
+      <span id="dump-btn-text">Process with AI</span>
+      <div class="spinner" id="dump-spinner" style="display:none;"></div>
+    </button>
+    <p class="dump-status" id="dump-status"></p>
+
+    <!-- Preview panel (shown after API response) -->
+    <div class="dump-preview" id="dump-preview">
+      <p class="dump-preview-label">Preview — edit before publishing</p>
+
+      <div class="dump-field">
+        <label>Title</label>
+        <input type="text" id="prev-title" class="dump-field-input"/>
+      </div>
+      <div class="dump-field">
+        <label>Teaser (2 sentences shown on the blog card)</label>
+        <textarea id="prev-teaser" class="dump-field-textarea" rows="3"></textarea>
+      </div>
+      <div class="dump-field">
+        <label>Opening hook (displayed as pull-quote)</label>
+        <textarea id="prev-hook" class="dump-field-textarea" rows="3"></textarea>
+      </div>
+      <div class="dump-field">
+        <label>The situation (context)</label>
+        <textarea id="prev-situation" class="dump-field-textarea" rows="5"></textarea>
+      </div>
+      <div class="dump-field">
+        <label>The turn (insight or challenge)</label>
+        <textarea id="prev-turn" class="dump-field-textarea" rows="5"></textarea>
+      </div>
+      <div class="dump-field">
+        <label>The lesson</label>
+        <textarea id="prev-lesson" class="dump-field-textarea" rows="4"></textarea>
+      </div>
+      <div class="dump-field">
+        <label>Takeaway (one punchy closing line — shown as highlighted quote)</label>
+        <input type="text" id="prev-takeaway" class="dump-field-input"/>
+      </div>
+      <div class="dump-field">
+        <label>Category <span style="color:#f87171;font-size:0.7rem;">required</span></label>
+        <div style="display:flex;gap:0.6rem;margin-top:0.1rem;">
+          <button id="cat-knowledge" class="dump-cat-btn selected" onclick="selectCategory('knowledge')">📚 Knowledge</button>
+          <button id="cat-life" class="dump-cat-btn" onclick="selectCategory('life')">🌱 Life</button>
+        </div>
+        <p style="font-size:0.7rem;color:var(--text-3);margin-top:0.5rem;">Knowledge = how things work. Life = how you think and who you are.</p>
+      </div>
+      <div class="dump-field">
+        <label>Tags (comma-separated)</label>
+        <input type="text" id="prev-tags" class="dump-field-input" placeholder="e.g. AI PM, Fintech, Career"/>
+      </div>
+      <div class="dump-field">
+        <label>Image caption <span style="color:var(--text-3);font-weight:400;">(shown under original image in post)</span></label>
+        <input type="text" id="prev-img-caption" class="dump-field-input" placeholder="e.g. My original sketch of the flow"/>
+      </div>
+      <div class="dump-field">
+        <label>Recreated diagram <span style="color:var(--text-3);font-weight:400;">(AI-generated SVG — edit or clear if not needed)</span></label>
+        <textarea id="prev-diagram" class="dump-field-textarea" rows="8" placeholder="SVG or HTML diagram will appear here if the model generated one."></textarea>
+      </div>
+      <div class="dump-field">
+        <label>Technical section <span style="color:var(--text-3);font-weight:400;">(optional — tables, numbered steps, how-it-works. HTML accepted)</span></label>
+        <textarea id="prev-tech" class="dump-field-textarea" rows="6" placeholder="Leave empty if not needed. Or paste/edit the HTML the model generated."></textarea>
+      </div>
+
+      <div class="dump-preview-actions">
+        <button class="dump-publish-btn" onclick="publishPost()">Publish to blog →</button>
+        <button class="dump-discard-btn" onclick="discardPreview()">Discard</button>
+      </div>
+    </div>
+
+    <!-- Manage published posts -->
+    <div class="dump-posts-section" id="dump-posts-section" style="display:none;">
+      <p class="dump-label">Published posts from this tool</p>
+      <div id="dump-posts-list"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   DATA: DEFAULT POSTS
+   Full storytelling format: hook → situation → turn → lesson → takeaway
+   ════════════════════════════════════════════════════════════════════════ */
+const DEFAULT_POSTS = [
+  {
+    id: 'post-engineer-to-pm',
+    title: 'How I went from mechanical engineer to AI PM',
+    teaser: "I didn't plan to become a product manager. I planned to optimize pipelines. The instinct turned out to be more portable than the job title.",
+    tags: ['Career','AI PM'],
+    readTime: '5 min read',
+    membersOnly: false,
+    category: 'life',
+    date: '2025-03-12',
+    source: null,
+    content: {
+      hook: "I didn't set out to become a product manager. I set out to make pipelines more efficient. That was at Tata Motors, in 2017, during a summer internship where I optimised ventilation design and negotiated ₹40L in vendor savings. The work was good. The instinct behind it — find what's broken, understand why, fix it — turned out to be more portable than I knew.",
+      situation: "The path from mechanical engineering to AI PM isn't a common one, and I won't pretend it was a planned arc. VIT gave me a systems lens — how to think in constraints, first principles, and feedback loops. Urban Company gave me my first real taste of operations at scale. Within five months of joining, I was owning 60% of India's water purifier business, building live dashboards, fixing supply-demand gaps, and learning what it actually means to care about a metric when something breaks at 2am. The title said Category Manager. The job was, in hindsight, product work — just without the title.",
+      turn: "Purplle was where the product title finally appeared, and it humbled me immediately. My first A/B test — a cart upsell widget I was genuinely confident about — came back with results I didn't expect. The data wasn't wrong. My prior was. I almost explained it away. Instead, I ran it again with a variation. That discomfort — the moment where your best logic meets actual user behaviour — is where product instinct gets built. Not in frameworks. In the gap between what you predicted and what happened.",
+      lesson: "Zeta pushed all of this further. Fintech adds compliance, real money, and regulatory weight to every product decision. When I shipped NLP-based intent classification for card closures, I wasn't just solving an ops problem — I was making a judgment call about what a frustrated user actually wanted in that moment. That's when product work starts to feel serious. The title has changed five times across five years. The instinct — sit with the broken thing, understand it honestly, fix it — hasn't moved once.",
+      takeaway: "The title changes. The instinct doesn't."
+    }
+  },
+  {
+    id: 'post-nlp-intent',
+    title: 'What NLP card closure taught me about user intent',
+    teaser: "Thousands of users told us they wanted to close their credit card. Most of them were wrong about what they actually wanted.",
+    tags: ['AI/ML','Fintech'],
+    readTime: '4 min read',
+    membersOnly: false,
+    category: 'knowledge',
+    date: '2025-02-18',
+    source: null,
+    content: {
+      hook: "Thousands of users told us they wanted to close their credit card. Most of them were wrong about what they actually wanted.",
+      situation: "This sounds counterintuitive, so let me be precise. At Zeta, card closure requests were routing uniformly — every user who initiated closure hit the same flow, the same friction, the same retention script. We were treating 'I want to close my card' as a single, unambiguous signal. It isn't. When we dug into the data, the user population split cleanly into two groups. There were users who had made a real financial decision — done with the card, retention was a waste of everyone's time. And there were users who were frustrated, confused, or had hit a specific problem they needed help resolving. For the second group, a skilled retention agent could genuinely change the outcome. For the first group, friction was just damage.",
+      turn: "We built an NLP-based intent classifier to separate them. High-intent closures routed to retention agents. Low-intent requests auto-closed. The mechanics weren't complicated — the model ingested the user's journey context, recent interactions, and the language of the request to assign an intent score. What was interesting wasn't the tech. It was what the data revealed about how users communicate frustration. People rarely say 'I am frustrated.' They say 'close my account.' They escalate the action to communicate the emotion. Once you see this pattern, you can't unsee it.",
+      lesson: "What I took away: stated intent and actual intent are often different things. A user telling you the action they want to take is not always telling you the problem they have. The product opportunity almost always lives in that gap. The NLP model worked because it was looking for emotional signal in a place where people expected only transactional input. ~40% reduction in ops effort and +15% closure-avoidance rate were the metrics. But the real output was a more honest read of what users actually needed in a high-stakes moment.",
+      takeaway: "The best feature I've shipped wasn't a feature. It was a better question: what did they actually mean?"
+    }
+  },
+  {
+    id: 'post-ab-testing',
+    title: "On A/B testing: what Purplle taught me that no course could",
+    teaser: "I was completely certain the cart upsell widget would work. I had research, logic, good design, and a clean spec. I was wrong — and that turned out to be the most useful thing that happened.",
+    tags: ['Growth','Testing'],
+    readTime: '6 min read',
+    membersOnly: false,
+    category: 'knowledge',
+    date: '2025-01-28',
+    source: null,
+    content: {
+      hook: "I was completely certain the cart upsell widget would work. I had user research, a clean hypothesis, well-reasoned design, and a detailed spec. I was wrong.",
+      situation: "At Purplle, our average order value had a ceiling that felt beatable. The logic was simple: users who had already decided to purchase something were in a buying mindset — showing relevant product suggestions at the right moment should nudge the basket size up. I shipped the first version of the cart upsell widget with genuine confidence. The first test result came back mixed. Not bad, but meaningfully different from what I expected. I almost explained it away — edge cases, timing, seasonal noise. Instead, I sat with it.",
+      turn: "I ran a second variation. Then a third. The widget eventually lifted AOV by ~₹100 with no conversion drop — but the version that worked looked quite different from the one I'd designed. The product selection logic had changed, the placement had moved, the trigger timing was adjusted. My original hypothesis was right (users at cart are receptive to suggestions). My original execution was off (the specific items, moment, and framing I'd chosen weren't the right ones). The version that worked required the data to show me where I was wrong. The only way I got there was by running the tests and actually looking at what they told me — not looking for confirmation.",
+      lesson: "What Purplle taught me isn't really about A/B testing mechanics. It's about the relationship between confidence and evidence. I've seen PMs stop a test early because the initial signal looked good. I've seen others avoid testing entirely because they're sure they're right. Both are the same mistake dressed differently. Tests aren't there to validate what you already know. They're there to surface what you don't know faster than intuition can. The humbling part is that you often can't tell the difference between a good idea badly executed and a bad idea — until you run the experiment.",
+      takeaway: "Run the experiment. Read the result. Let it change something. That's the whole job."
+    }
+  },
+  {
+    id: 'post-rbi-constraints',
+    title: 'RBI compliance as a product constraint — and why I now love constraints',
+    teaser: "Regulatory compliance sounds like a ceiling. It turned out to be one of the best forcing functions for product thinking I've encountered.",
+    tags: ['Fintech','Compliance'],
+    readTime: '7 min read',
+    membersOnly: true,
+    category: 'knowledge',
+    date: '2025-01-10',
+    source: null,
+    content: { hook:'', situation:'', turn:'', lesson:'', takeaway:'' }
+  },
+  {
+    id: 'post-metric-broke-team',
+    title: 'The metric that almost broke our team (and how we fixed it)',
+    teaser: "We were optimising hard and shipping fast. We were also optimising for the wrong number — and it took a while to see it.",
+    tags: ['Analytics','Leadership'],
+    readTime: '5 min read',
+    membersOnly: true,
+    category: 'life',
+    date: '2024-12-15',
+    source: null,
+    content: { hook:'', situation:'', turn:'', lesson:'', takeaway:'' }
+  }
+];
+
+/* ════════════════════════════════════════════════════════════════════════
+   POSTS STORE: merges defaults + localStorage posts, newest first
+   ════════════════════════════════════════════════════════════════════════ */
+const LS_KEY = 'ps_blog_posts_v1';
+
+function getStoredPosts() {
+  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+}
+function saveStoredPost(post) {
+  const posts = getStoredPosts();
+  posts.unshift(post);
+  localStorage.setItem(LS_KEY, JSON.stringify(posts));
+}
+function deleteStoredPost(id) {
+  const posts = getStoredPosts().filter(p => p.id !== id);
+  localStorage.setItem(LS_KEY, JSON.stringify(posts));
+}
+function getAllPosts() {
+  const stored = getStoredPosts();
+  return [...stored, ...DEFAULT_POSTS];
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   BLOG RENDERING
+   ════════════════════════════════════════════════════════════════════════ */
+
+// ── UPDATE QUADRANT COUNTS ───────────────────────────────────────────────
+function updateQuadCounts() {
+  // Blog count — DEFAULT_POSTS covers what visitors see on the deployed site.
+  // getAllPosts() adds localStorage posts too, so Prashant's local session
+  // shows his freshly published posts in the count immediately.
+  var blogEl = document.getElementById('hq-blog-count');
+  if(blogEl) {
+    var total = getAllPosts().length;
+    blogEl.textContent = total;
+  }
+
+  // Case study count — reads DOM directly.
+  // Since cs-cards are hardcoded in HTML, visitors always get the right number.
+  // This also means adding a new CS card in HTML auto-updates the count.
+  var csEl = document.getElementById('hq-cs-count');
+  if(csEl) {
+    var csCount = document.querySelectorAll('.cs-card').length;
+    csEl.textContent = csCount;
+  }
+}
+
+// Re-export DEFAULT_POSTS.length as baseline so we can always reflect
+// the deployed post count even without localStorage
+function getBaselineBlogCount() {
+  return DEFAULT_POSTS.length;
+}
+
+function renderBlog() {
+  const posts = getAllPosts();
+  const knowledge = posts.filter(p => (p.category || 'knowledge') === 'knowledge');
+  const life = posts.filter(p => p.category === 'life');
+
+  function renderCard(p) {
+    const sourceBadge = p.source ? `<span class="b-source-badge">${p.source}</span>` : '';
+    if (p.membersOnly) {
+      return `
+        <div class="blog-card" style="min-height:220px;">
+          <div class="blog-meta">${p.tags.map(t=>`<span class="b-tag">${t}</span>`).join('')}<span class="b-time">${p.readTime}</span>${sourceBadge}</div>
+          <h3 class="b-title">${p.title}</h3>
+          <p class="b-teaser">${p.teaser}</p>
+          <div class="b-gate">
+            <span style="font-size:0.9rem;">🔒</span>
+            <p style="color:var(--text-2);font-size:0.74rem;">Members only</p>
+            <button class="b-gate-btn">Join to read</button>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="blog-card" onclick="openBP('${p.id}')">
+        <div class="blog-meta">${p.tags.map(t=>`<span class="b-tag">${t}</span>`).join('')}<span class="b-time">${p.readTime}</span>${sourceBadge}</div>
+        <h3 class="b-title">${p.title}</h3>
+        <p class="b-teaser">${p.teaser}</p>
+        <p class="b-read">Read →</p>
+      </div>`;
+  }
+
+  const kEl = document.getElementById('blog-knowledge');
+  const lEl = document.getElementById('blog-life');
+  if (kEl) kEl.innerHTML = knowledge.length
+    ? knowledge.map(renderCard).join('')
+    : `<p style="color:var(--text-3);font-size:0.82rem;font-style:italic;">No posts yet — add one via the dump tool.</p>`;
+  if (lEl) lEl.innerHTML = life.length
+    ? life.map(renderCard).join('')
+    : `<p style="color:var(--text-3);font-size:0.82rem;font-style:italic;">No posts yet — add one via the dump tool.</p>`;
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   BLOG POST MODAL
+   ════════════════════════════════════════════════════════════════════════ */
+async function openBP(id) {
+  const post = getAllPosts().find(p => p.id === id);
+  if (!post || post.membersOnly) return;
+  const c = post.content;
+
+  const imageHtml = post.image_data ? `
+    <div class="bp-image-block">
+      <div class="bp-image-wrap" onclick="openLightbox('${post.id}')">
+        <img src="${post.image_data}" alt="Original diagram from notes"/>
+      </div>
+      <p class="bp-image-caption">${post.image_caption || c.image_caption || 'Original diagram — click to zoom'}</p>
+    </div>` : '';
+
+  // Helper: find diagram steps — checks top-level AND content (backward compat for old posts)
+  function getDiagramSteps(post) {
+    let steps = post.diagram_steps                    // current format — top level
+      || post.content?.diagram_steps                 // old format — inside content
+      || null;
+    if (!steps) return [];
+    if (typeof steps === 'string') {
+      try { steps = JSON.parse(steps); } catch(e) { return []; }
+    }
+    return Array.isArray(steps) ? steps : [];
+  }
+
+  const steps = getDiagramSteps(post);
+  // Show diagram section if: steps exist OR post has an image (backward compat)
+  const showDiagram = steps.length > 0 || !!post.image_data;
+  const diagramHtml = showDiagram ? `
+    <div class="bp-diagram-block">
+      <p class="bp-diagram-label">Recreated diagram</p>
+      <div class="bp-diagram-inner" id="mermaid-render-${post.id}">
+        ${steps.length ? '' : '<p class="flow-error" style="font-size:0.78rem;">Re-process this post through the dump tool to generate the diagram.</p>'}
+      </div>
+    </div>` : '';
+
+  document.getElementById('bp-body').innerHTML = `
+    <p class="bp-label">${post.tags.join(' · ')}</p>
+    <h1 class="bp-title">${post.title}</h1>
+    <div class="bp-meta">
+      ${post.tags.map(t=>`<span class="bp-tag">${t}</span>`).join('')}
+      <span class="bp-time">${post.readTime}</span>
+      ${post.source ? `<span class="bp-time">via ${post.source}</span>` : ''}
+    </div>
+    ${c.hook ? `<p class="bp-hook">${c.hook}</p>` : ''}
+    ${imageHtml}
+    ${c.situation ? `<p class="bp-body">${c.situation}</p>` : ''}
+    ${c.turn ? `<hr class="bp-divider"/><p class="bp-body">${c.turn}</p>` : ''}
+    ${diagramHtml}
+    ${c.lesson ? `<p class="bp-body">${c.lesson}</p>` : ''}
+    ${c.takeaway ? `<div class="bp-takeaway">"${c.takeaway}"</div>` : ''}
+    ${c.tech_section ? `<hr class="bp-divider"/>${c.tech_section}` : ''}
+  `;
+
+  // Store image data for lightbox lookup
+  if (post.image_data) {
+    document._lightboxImages = document._lightboxImages || {};
+    document._lightboxImages[post.id] = post.image_data;
+  }
+
+  document.getElementById('bp-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+
+  // Render flowchart
+  if (steps.length) {
+    const container = document.getElementById(`mermaid-render-${post.id}`);
+    if (container) {
+      try {
+        container.innerHTML = renderFlowchart({ title: post.diagram_title || '', steps });
+      } catch(e) {
+        console.error('Flowchart render error:', e);
+        container.innerHTML = `<p class="flow-error">Diagram unavailable.</p>`;
+      }
+    }
+  }
+}
+function closeBP() {
+  document.getElementById('bp-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function openLightbox(postId) {
+  event.stopPropagation();
+  const src = (document._lightboxImages || {})[postId];
+  if (!src) return;
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CASE STUDY MODAL
+   ════════════════════════════════════════════════════════════════════════ */
+const CS_DATA = {
+  cbr:{tag:'Ops · Automation',tc:'#E8A020',tb:'rgba(232,160,32,0.1)',bc:'rgba(232,160,32,0.25)',title:'CBR Automation',
+    s:[{l:'🎯 Problem',c:'#E8A020',t:"Credit Balance Refunds took 2–3 days, generating ~150 CX escalations per week with heavy manual intervention — a compliance and ops risk at scale."},
+       {l:'💡 Insight',c:'#E8A020',t:"Users expected refunds to feel like UPI — instant. The delay wasn't a technical constraint; it was an unreviewed architecture decision. The fix was a redesign, not a patch."},
+       {l:'🔧 What I Built',c:'#E8A020',t:"Automated end-to-end CBR flow with real-time CASA refunds via self-serve. RBI compliance built in from day one. Manual ops touchpoints removed entirely."},
+       {l:'📊 Result',c:'#E8A020',t:"TAT dropped to instant. ~150 CX tickets/week eliminated. The self-serve model became a template for subsequent ops automation on Pixel."}]},
+  nlp:{tag:'AI · Retention',tc:'#60A5FA',tb:'rgba(96,165,250,0.1)',bc:'rgba(96,165,250,0.25)',title:'AI-Powered Card Closure',
+    s:[{l:'🎯 Problem',c:'#60A5FA',t:"Every card closure request routed identically — burning agent time on users who needed reassurance, losing churning users without a real retention attempt."},
+       {l:'💡 Insight',c:'#60A5FA',t:"Intent matters more than stated action. 'Close my card' might mean 'I'm frustrated' or 'I'm done.' NLP could separate them before any human touched the request."},
+       {l:'🔧 What I Built',c:'#60A5FA',t:"NLP-based intent classification: high-intent closures routed to retention agents; low-intent auto-closed. Designed classification logic, worked with engineering on integration and fallbacks."},
+       {l:'📊 Result',c:'#60A5FA',t:"~40% reduction in manual ops. ~200 agent-hours/month saved. +15% closure-avoidance rate — agents spending time only where they could actually change outcomes."}]},
+  rbi:{tag:'Compliance · Growth',tc:'#34D399',tb:'rgba(52,211,153,0.1)',bc:'rgba(52,211,153,0.25)',title:'RBI Activation Uplift',
+    s:[{l:'🎯 Problem',c:'#34D399',t:"Card activation stuck at 92–93% — confusing J3 flows compounded by a critical bug blocking ~75% of affected cards. Compliance and revenue risk at ~32K cards/month."},
+       {l:'💡 Insight',c:'#34D399',t:"The bug was masking the flow problem. Fixing only the bug would improve numbers without improving experience. Both needed addressing — plus externalisation with OTP consent for dormancy."},
+       {l:'🔧 What I Built',c:'#34D399',t:"Redesigned J3 activation flows end-to-end, fixed the critical bug (75%→90%), added OTP-based PWA consent for externalisation, and built a reactivation flow for dormancy recovery."},
+       {l:'📊 Result',c:'#34D399',t:"Activation reached 96–97%. ~32K cards/month impacted. ~1K reactivations in 2.5 months. Avoidable closures prevented at scale."}]},
+  purplle:{tag:'Growth · E-commerce',tc:'#FB923C',tb:'rgba(251,146,60,0.1)',bc:'rgba(251,146,60,0.25)',title:'Storefront Growth at Purplle',
+    s:[{l:'🎯 Problem',c:'#FB923C',t:"Storefront leaking value everywhere — low AOV, high OOS frustration, first-install conversion under 5%, and sale-day downtime in hours."},
+       {l:'💡 Insight',c:'#FB923C',t:"Quick wins exist at every funnel stage if you experiment and read data honestly. The Locale.ai alert system was the highest-impact, lowest-effort lever — and the one no one had prioritised."},
+       {l:'🔧 What I Built',c:'#FB923C',t:"Cart upsell widget (A/B + multivariate), MPC switching for OOS reduction, first-install flow optimisation, Locale.ai trigger-based alerts, and a Looker storefront tracking dashboard."},
+       {l:'📊 Result',c:'#FB923C',t:"AOV up ~₹100, no conversion drop. OOS cut ~4%. Install conversion 4.5%→6%. Downtime cut from 6–7hrs to &lt;20 mins. Spot Award + growth recognition."}]},
+  npa:{tag:'Fintech · Infrastructure',tc:'#A78BFA',tb:'rgba(167,139,250,0.1)',bc:'rgba(167,139,250,0.25)',title:'0→1 NPA Accounting System',
+    s:[{l:'🎯 Problem',c:'#A78BFA',t:"HDFC Pixel had no system for NPA, Secondary NPA, or Charge-Off accounting — ₹29Cr NPA and ₹9Cr write-offs/month running untracked, blocking RBI phased rollout."},
+       {l:'💡 Insight',c:'#A78BFA',t:"MAD and TAD logic had to be codified before automation could happen. The product work was translating dense regulatory language into clear system logic — a translation problem as much as a product one."},
+       {l:'🔧 What I Built',c:'#A78BFA',t:"0→1 NPA → Secondary NPA → Charge-Off accounting across MAD and TAD logic. Redesigned billing-day selection with month-end fallbacks. Enabled phased rollout safely."},
+       {l:'📊 Result',c:'#A78BFA',t:"₹29Cr NPA and ₹9Cr write-offs/month fully tracked and automated. RBI compliance unblocked. Phased rollout enabled. Shining Star and Outstanding Performer awards."}]}
+};
+
+function openCS(key) {
+  const c = CS_DATA[key];
+  const tag = document.getElementById('cs-tag');
+  tag.textContent = c.tag; tag.style.background = c.tb; tag.style.color = c.tc;
+  document.getElementById('cs-box').style.borderColor = c.bc;
+  document.getElementById('cs-title').textContent = c.title;
+  document.getElementById('cs-body').innerHTML = c.s.map(s =>
+    `<div class="m-block"><p class="m-label" style="color:${s.c}">${s.l}</p><p class="m-text">${s.t}</p></div>`
+  ).join('');
+  document.getElementById('cs-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCS() { document.getElementById('cs-modal').classList.remove('open'); document.body.style.overflow = ''; }
+
+/* ════════════════════════════════════════════════════════════════════════
+   /DUMP TOOL
+   ════════════════════════════════════════════════════════════════════════ */
+let selectedTag = 'Project Retrospective';
+let selectedCategory = 'knowledge';
+let currentDraft = null;
+let selectedProvider = 'gemini';
+let selectedModel = 'gemini-2.5-flash';
+
+// ── PROVIDER / MODEL CONFIG ─────────────────────────────────────────────────
+const PROVIDERS = {
+  gemini: {
+    keyName: 'gemini_key',
+    keyPrompt: 'Enter your Google AI Studio API key (aistudio.google.com → Get API key)',
+    models: [
+      { id: 'gemini-2.5-pro',   name: 'Gemini 2.5 Pro',   badge: 'pro',    desc: 'Best quality — deeper reasoning, richer writing' },
+      { id: 'gemini-2.5-flash', name: 'Gemini 2.5 Flash', badge: 'best',   desc: 'Fast + smart — recommended for most posts' },
+      { id: 'gemini-2.0-flash', name: 'Gemini 2.0 Flash', badge: 'stable', desc: 'Reliable fallback, lower quota use' }
+    ],
+    visionModel: null
+  },
+  groq: {
+    keyName: 'groq_key',
+    keyPrompt: 'Enter your Groq API key (console.groq.com → API Keys)',
+    models: [
+      { id: 'llama-3.3-70b-versatile', name: 'Llama 3.3 70B', badge: 'best',   desc: 'Best Llama text quality' },
+      { id: 'llama3-70b-8192',          name: 'Llama 3 70B',   badge: 'mid',    desc: 'Fast, very stable' },
+      { id: 'llama-3.1-8b-instant',     name: 'Llama 3.1 8B',  badge: 'stable', desc: 'Fastest, lightest, most quota' }
+    ],
+    visionModel: 'meta-llama/llama-4-scout-17b-16e-instruct'
+  }
+};
+
+function selectProvider(p) {
+  selectedProvider = p;
+  document.getElementById('prov-gemini').classList.toggle('active', p === 'gemini');
+  document.getElementById('prov-groq').classList.toggle('active', p === 'groq');
+  // Set default model for this provider
+  selectedModel = PROVIDERS[p].models[0].id;
+  renderModelRow();
+}
+
+function selectModel(id) {
+  selectedModel = id;
+  document.querySelectorAll('.model-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.model === id);
+  });
+}
+
+function renderModelRow() {
+  const models = PROVIDERS[selectedProvider].models;
+  document.getElementById('model-row').innerHTML = models.map(m => `
+    <button class="model-btn ${m.id === selectedModel ? 'active' : ''}"
+            data-model="${m.id}" onclick="selectModel('${m.id}')">
+      <span class="mb-name">${m.name}</span>
+      <span class="mb-badge ${m.badge}">${m.badge}</span>
+      <span class="mb-desc">${m.desc}</span>
+    </button>`).join('');
+}
+
+function selectCategory(cat) {
+  selectedCategory = cat;
+  document.getElementById('cat-knowledge').classList.toggle('selected', cat === 'knowledge');
+  document.getElementById('cat-life').classList.toggle('selected', cat === 'life');
+}
+
+// Image input — show/hide clear button
+document.addEventListener('DOMContentLoaded', () => {
+  const imgInput = document.getElementById('dump-image');
+  if (imgInput) {
+    imgInput.addEventListener('change', function() {
+      const clearBtn = document.getElementById('clear-img-btn');
+      if (clearBtn) clearBtn.style.display = this.files[0] ? 'inline-block' : 'none';
+    });
+  }
+  renderModelRow(); // init model buttons
+});
+
+// Tag selector
+document.querySelectorAll('.dump-tag').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.dump-tag').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedTag = btn.dataset.tag;
+  });
+});
+
+/*
+  safeParseJSON — handles all common LLM JSON failure modes:
+  1. Markdown fences  2. Thinking blocks  3. Control chars  4. Trailing commas  5. Preamble text
+*/
+function safeParseJSON(raw) {
+  if (!raw || typeof raw !== 'string') throw new Error('Empty response from AI.');
+
+  // Strip thinking blocks and markdown fences
+  let str = raw
+    .replace(/<thinking>[\s\S]*?<\/thinking>/gi, '')
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/```json\s*/gi, '')
+    .replace(/```\s*/g, '')
+    .trim();
+
+  // Extract outermost { }
+  const start = str.indexOf('{');
+  const end = str.lastIndexOf('}');
+  if (start === -1 || end === -1) {
+    const preview = str.substring(0, 200).replace(/\n/g, '↵');
+    throw new Error(`AI returned non-JSON. Got: "${preview}"`);
+  }
+  str = str.slice(start, end + 1);
+
+  // Replace backtick-delimited strings with double-quoted strings
+  // AI sometimes returns: "field": `value` which is JS but not JSON
+  str = str.replace(/:\s*`([\s\S]*?)`/g, (_, content) => {
+    const escaped = content
+      .replace(/\\/g, '\\\\')
+      .replace(/"/g, '\\"')
+      .replace(/\n/g, '\\n')
+      .replace(/\r/g, '\\r')
+      .replace(/\t/g, '\\t');
+    return ': "' + escaped + '"';
+  });
+
+  // Try as-is
+  try { return JSON.parse(str); } catch (_) {}
+
+  // Remove trailing commas
+  str = str.replace(/,(\s*[}\]])/g, '$1');
+  try { return JSON.parse(str); } catch (_) {}
+
+  // Escape control characters inside string values
+  let result = '';
+  let inString = false;
+  let escaped = false;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str[i];
+    const code = ch.charCodeAt(0);
+    if (escaped) { result += ch; escaped = false; continue; }
+    if (ch === '\\') { result += ch; escaped = true; continue; }
+    if (ch === '"') { inString = !inString; result += ch; continue; }
+    if (inString && code < 0x20) {
+      if (ch === '\n') { result += '\\n'; continue; }
+      if (ch === '\r') { result += '\\r'; continue; }
+      if (ch === '\t') { result += '\\t'; continue; }
+      continue;
+    }
+    result += ch;
+  }
+  result = result.replace(/,(\s*[}\]])/g, '$1');
+  return JSON.parse(result);
+}
+
+async function processDump() {
+  const raw = document.getElementById('dump-input').value.trim();
+  if (!raw) { setStatus('Paste some notes first.', 'error'); return; }
+
+  const btn = document.getElementById('dump-btn');
+  const btnText = document.getElementById('dump-btn-text');
+  const spinner = document.getElementById('dump-spinner');
+  btn.disabled = true; btnText.textContent = 'Processing...'; spinner.style.display = 'block';
+
+  // Get or prompt for API key
+  const provCfg = PROVIDERS[selectedProvider];
+  let apiKey = sessionStorage.getItem(provCfg.keyName);
+  if (!apiKey) {
+    apiKey = window.prompt(provCfg.keyPrompt + ':');
+    if (!apiKey) {
+      setStatus('API key required.', 'error');
+      btn.disabled = false; btnText.textContent = 'Process with AI'; spinner.style.display = 'none';
+      return;
+    }
+    sessionStorage.setItem(provCfg.keyName, apiKey.trim());
+  }
+
+  const imageInput = document.getElementById('dump-image');
+  const imageFile = imageInput && imageInput.files[0];
+
+  // ── Helper: image → base64 ────────────────────────────────────────────────
+  async function toBase64(file) {
+    return new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = rej;
+      r.readAsDataURL(file);
+    });
+  }
+
+  // ── Helper: call Gemini (native API, JSON mode forced) ───────────────────
+  async function callGemini(parts, model, maxTokens) {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    const body = {
+      contents: [{ parts }],
+      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: maxTokens }
+    };
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = data?.error?.message || JSON.stringify(data).substring(0, 200);
+      if (res.status === 401 || res.status === 403) {
+        sessionStorage.removeItem(provCfg.keyName);
+        throw new Error(`Gemini auth failed — key cleared. ${msg}`);
+      }
+      if (res.status === 429) throw new Error(`Gemini quota exceeded on ${model}. Try a different model or switch to Groq.`);
+      throw new Error(`Gemini ${res.status}: ${msg}`);
+    }
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) {
+      const reason = data?.candidates?.[0]?.finishReason || 'unknown';
+      throw new Error(`Gemini returned no content (finishReason: ${reason}).`);
+    }
+    return text;
+  }
+
+  // ── Helper: call Groq (OpenAI-compat) ───────────────────────────────────
+  async function callGroq(messages, model, maxTokens) {
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + apiKey },
+      body: JSON.stringify({ model, max_tokens: maxTokens, messages })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      const msg = data?.error?.message || JSON.stringify(data).substring(0, 200);
+      if (res.status === 401) {
+        sessionStorage.removeItem(provCfg.keyName);
+        throw new Error('Groq auth failed — key cleared. Try again.');
+      }
+      if (res.status === 429) throw new Error(`Groq quota exceeded on ${model}. Try a different model or switch to Gemini.`);
+      throw new Error(`Groq ${res.status}: ${msg}`);
+    }
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) throw new Error('Groq returned no content.');
+    return text;
+  }
+
+  // ── Unified call dispatcher ──────────────────────────────────────────────
+  async function callAI(textPrompt, diagPrompt, imageFile) {
+    const b64 = imageFile ? await toBase64(imageFile) : null;
+
+    if (selectedProvider === 'gemini') {
+      const textParts = b64
+        ? [{ inline_data: { mime_type: imageFile.type, data: b64 } }, { text: textPrompt }]
+        : [{ text: textPrompt }];
+      const textRaw = await callGemini(textParts, selectedModel, 6000);
+      const parsed = safeParseJSON(textRaw);
+
+      let diagramTitle = '', diagramSteps = [];
+      if (b64 && diagPrompt) {
+        try {
+          const dParts = [{ inline_data: { mime_type: imageFile.type, data: b64 } }, { text: diagPrompt }];
+          const dRaw = await callGemini(dParts, selectedModel, 6000);
+          const dp = safeParseJSON(dRaw);
+          diagramTitle = dp.title || ''; diagramSteps = Array.isArray(dp.steps) ? dp.steps : [];
+        } catch(e) { console.warn('Gemini diagram call failed (non-fatal):', e.message); }
+      }
+      return { parsed, diagramTitle, diagramSteps };
+
+    } else {
+      // Groq
+      const textModel = selectedModel;
+      const visionModel = PROVIDERS.groq.visionModel;
+
+      // Text call
+      const textMessages = b64
+        ? [{ role: 'user', content: [
+            { type: 'image_url', image_url: { url: `data:${imageFile.type};base64,${b64}` } },
+            { type: 'text', text: textPrompt }
+          ]}]
+        : [{ role: 'user', content: textPrompt }];
+      const textRaw = await callGroq(textMessages, b64 ? visionModel : textModel, 6000);
+      const parsed = safeParseJSON(textRaw);
+
+      let diagramTitle = '', diagramSteps = [];
+      if (b64 && diagPrompt) {
+        try {
+          const dMessages = [{ role: 'user', content: [
+            { type: 'image_url', image_url: { url: `data:${imageFile.type};base64,${b64}` } },
+            { type: 'text', text: diagPrompt }
+          ]}];
+          const dRaw = await callGroq(dMessages, visionModel, 6000);
+          const dp = safeParseJSON(dRaw);
+          diagramTitle = dp.title || ''; diagramSteps = Array.isArray(dp.steps) ? dp.steps : [];
+        } catch(e) { console.warn('Groq diagram call failed (non-fatal):', e.message); }
+      }
+      return { parsed, diagramTitle, diagramSteps };
+    }
+  }
+
+  // ── Build prompts ────────────────────────────────────────────────────────
+  const textPrompt = `You are a world-class storyteller writing as Prashant Singh — a Product Manager at Zeta (HDFC Pixel credit card), previously at Purplle and Urban Company. Engineering background. Direct, specific, honest, wry. Not corporate.
+
+BEFORE WRITING — diagnose the soul of this story. Choose ONE tone: sharp & punchy / dry & witty / raw & unfiltered / warm & intimate / lyrical & slow. Choose ONE structure: could start at the end, orbit a central image, be one long zoomed-in moment. Commit fully.
+
+WRITING RULES:
+- Open with impact — first line must be impossible to stop after
+- Every sentence moves the story forward, deepens emotion, or reveals something new
+- Name real things: Pixel card, CBR automation, NLP intent classification, RBI compliance, Purplle storefront. Use real numbers.
+- Each paragraph (situation, turn, lesson) = 120-200 words minimum. Full paragraphs, not summaries.
+- Close with resonance — final line = a door closing, not a summary
+
+BANNED: "Have you ever wondered" / "Demystifying" / "Game-changer" / "Paradigm shift" / "Move the needle" / "Learnings" / rhetorical question openers / "In conclusion" / "Key takeaways"
+JSON FORMAT RULES: Use ONLY double quotes for all strings. NEVER use backticks. NEVER use single quotes as string delimiters. All JSON values must be valid JSON strings.
+
+TITLE RULE: Must be a first-person narrative statement — a sentence about what happened.
+GOOD: "I built a blog that almost writes itself" / "The metric we tracked wrong for three months"
+BAD: "Zero Friction Writing" / "Product Lessons" / any topic label
+
+SOURCE TYPE: This is a "${selectedTag}" piece.${imageFile ? '\nIMAGE: A diagram is attached. Let its structure inform the narrative.' : ''}
+
+Return ONLY valid JSON — no fences, no preamble:
+{
+  "title": "first-person narrative title",
+  "teaser": "2 sentences. First: situation bluntly. Second: why worth writing.",
+  "tags": ["Tag1", "Tag2"],
+  "readTime": "X min read",
+  "image_caption": "${imageFile ? 'one sentence describing what the original image shows' : ''}",
+  "content": {
+    "hook": "2-3 sentences. Drop into a scene or counter-intuitive fact. No warm-up.",
+    "situation": "FULL PARAGRAPH 120-200 words. Context and setup. Name the product, metric, timeframe.",
+    "turn": "FULL PARAGRAPH 120-200 words. The pivot or realisation. One concrete beat.",
+    "lesson": "FULL PARAGRAPH 100-180 words. What came after — a scene or consequence, not stated wisdom.",
+    "takeaway": "One sentence. A door closing.",
+    "tech_section": "OPTIONAL. Only include if post has a genuine technical breakdown. Use plain HTML with double-quoted attributes only — no backticks, no template literals. Allowed class names: bp-section-title, bp-tech-box, bp-step, bp-step-num, bp-step-text, bp-table. Set to empty string if not needed."
+  }
+}
+
+RAW NOTES:
+${raw}`;
+
+  const diagPrompt = imageFile ? `Look at this diagram or flowchart image carefully.
+
+Return ONLY valid JSON — no fences, no preamble:
+{
+  "title": "short diagram title max 5 words",
+  "steps": [
+    {"label": "Node label max 5 words", "group": "Section name", "highlight": false, "type": "rect"}
+  ]
+}
+
+STRICT RULES for label: max 5 plain words, NO special characters (no brackets, parentheses, slashes, dashes, quotes).
+type: "rect" for normal steps, "decision" for branch points.
+highlight: true only for 2-3 most important nodes.
+group: same value for consecutive related nodes.
+Include EVERY node — do not skip any.` : null;
+
+  try {
+    setStatus(imageFile ? 'Step 1/2 — writing the post…' : `Writing with ${PROVIDERS[selectedProvider].models.find(m=>m.id===selectedModel)?.name || selectedModel}…`, '');
+
+    const { parsed, diagramTitle, diagramSteps } = await callAI(textPrompt, diagPrompt, imageFile);
+
+    if (imageFile && diagramSteps.length) setStatus('Step 2/2 — reading the diagram… done ✓', '');
+
+    currentDraft = { ...parsed, diagram_title: diagramTitle, diagram_steps: diagramSteps };
+    populatePreview(currentDraft);
+    document.getElementById('dump-preview').classList.add('show');
+    setStatus(
+      imageFile
+        ? `Done ✓  —  post written + ${diagramSteps.length} diagram steps`
+        : 'Done ✓  —  review and publish when ready',
+      'success'
+    );
+  } catch (err) {
+    setStatus('Error: ' + (err.message || 'Something went wrong.'), 'error');
+    console.error('processDump error:', err);
+  } finally {
+    btn.disabled = false; btnText.textContent = 'Process with AI'; spinner.style.display = 'none';
+  }
+}
+
+function populatePreview(d) {
+  document.getElementById('prev-title').value = d.title || '';
+  document.getElementById('prev-teaser').value = d.teaser || '';
+  document.getElementById('prev-hook').value = d.content?.hook || '';
+  document.getElementById('prev-situation').value = d.content?.situation || '';
+  document.getElementById('prev-turn').value = d.content?.turn || '';
+  document.getElementById('prev-lesson').value = d.content?.lesson || '';
+  document.getElementById('prev-takeaway').value = d.content?.takeaway || '';
+  document.getElementById('prev-tags').value = (d.tags || []).join(', ');
+  document.getElementById('prev-img-caption').value = d.image_caption || '';
+  document.getElementById('prev-diagram').value = (d.diagram_steps && d.diagram_steps.length)
+    ? JSON.stringify(d.diagram_steps, null, 2) : '';
+  document.getElementById('prev-tech').value = d.content?.tech_section || '';
+}
+
+function publishPost() {
+  const imageInput = document.getElementById('dump-image');
+  const imageFile = imageInput && imageInput.files[0];
+  let imageDataUrl = null;
+
+  const doPublish = (imgData) => {
+    const diagramSteps = (() => {
+      try { return JSON.parse(document.getElementById('prev-diagram').value || '[]'); }
+      catch { return []; }
+    })();
+    const post = {
+      id: 'dump-' + Date.now(),
+      title: document.getElementById('prev-title').value,
+      teaser: document.getElementById('prev-teaser').value,
+      tags: document.getElementById('prev-tags').value.split(',').map(t => t.trim()).filter(Boolean),
+      readTime: currentDraft?.readTime || '3 min read',
+      membersOnly: false,
+      category: selectedCategory,
+      date: new Date().toISOString().split('T')[0],
+      source: selectedTag,
+      image_data: imgData,
+      image_caption: document.getElementById('prev-img-caption').value,
+      diagram_title: currentDraft?.diagram_title || '',
+      diagram_steps: diagramSteps,
+      content: {
+        hook: document.getElementById('prev-hook').value,
+        situation: document.getElementById('prev-situation').value,
+        turn: document.getElementById('prev-turn').value,
+        lesson: document.getElementById('prev-lesson').value,
+        takeaway: document.getElementById('prev-takeaway').value,
+        tech_section: document.getElementById('prev-tech').value
+      }
+    };
+    saveStoredPost(post);
+    renderBlog();
+    updateQuadCounts();
+    discardPreview();
+    document.getElementById('dump-input').value = '';
+    document.getElementById('dump-image').value = '';
+    document.getElementById('clear-img-btn').style.display = 'none';
+    setStatus('Published! Visible on the blog.', 'success');
+    renderDumpPostsList();
+  };
+
+  if (imageFile) {
+    const reader = new FileReader();
+    reader.onload = () => doPublish(reader.result);
+    reader.onerror = () => doPublish(null);
+    reader.readAsDataURL(imageFile);
+  } else {
+    doPublish(null);
+  }
+}
+
+function discardPreview() {
+  document.getElementById('dump-preview').classList.remove('show');
+  currentDraft = null;
+}
+
+function setStatus(msg, type) {
+  const el = document.getElementById('dump-status');
+  el.textContent = msg;
+  el.className = 'dump-status' + (type ? ' ' + type : '');
+}
+
+function renderDumpPostsList() {
+  const stored = getStoredPosts();
+  const section = document.getElementById('dump-posts-section');
+  const list = document.getElementById('dump-posts-list');
+  if (!stored.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = stored.map(p => `
+    <div class="dump-post-row">
+      <span class="dump-post-title-sm">${p.title}</span>
+      <button class="dump-delete-btn" onclick="deleteDumpPost('${p.id}')">Delete</button>
+    </div>
+  `).join('');
+}
+
+function deleteDumpPost(id) {
+  deleteStoredPost(id);
+  renderBlog();
+  renderDumpPostsList();
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   HASH ROUTING: #dump shows the tool, everything else shows portfolio
+   ════════════════════════════════════════════════════════════════════════ */
+function checkRoute() {
+  if (window.location.hash === '#dump') {
+    document.getElementById('dump-page').classList.add('active');
+    document.body.style.overflow = 'hidden';
+    renderDumpPostsList();
+  } else {
+    document.getElementById('dump-page').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+}
+function exitDump() {
+  window.location.hash = '';
+  document.getElementById('dump-page').classList.remove('active');
+  document.body.style.overflow = '';
+}
+window.addEventListener('hashchange', checkRoute);
+checkRoute();
+
+/* ════════════════════════════════════════════════════════════════════════
+   MISC
+   ════════════════════════════════════════════════════════════════════════ */
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.07 });
+document.querySelectorAll('.sec').forEach(s => io.observe(s));
+
+// Active nav
+const navLinks = document.querySelectorAll('.nav-links a:not(.nav-cta)');
+const secEls = ['hero','journey','work','blog','connect'].map(id => document.getElementById(id)).filter(Boolean);
+const navIO = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(a => a.classList.remove('active'));
+      const l = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if (l) l.classList.add('active');
+    }
+  });
+}, { threshold: 0.4 });
+secEls.forEach(s => navIO.observe(s));
+
+// Timeline easter egg
+function toggleEaster(card) {
+  const el = card.querySelector('.tl-easter');
+  if (el) el.style.display = el.style.display === 'block' ? 'none' : 'block';
+}
+
+// Close modals on Esc
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeCS(); closeBP(); closeLightbox(); }
+});
+
+// Initial blog render
+renderBlog();
+
+// Custom flowchart renderer — takes JSON, returns HTML string
+// No external library. No parse errors. Full design control.
+function renderFlowchart(data) {
+  if (!data || !data.steps || !data.steps.length) return '<p class="flow-error">No diagram data.</p>';
+
+  // Group consecutive steps by their group label
+  const groups = [];
+  let currentGroup = null;
+  data.steps.forEach(step => {
+    const gLabel = step.group || '';
+    if (!currentGroup || currentGroup.label !== gLabel) {
+      currentGroup = { label: gLabel, steps: [] };
+      groups.push(currentGroup);
+    }
+    currentGroup.steps.push(step);
+  });
+
+  const arrow = () => `<div class="flow-arrow-inner"><div class="fa-line"></div><div class="fa-head"></div></div>`;
+  const groupArrow = () => `<div class="flow-group-arrow"><div class="fa-line"></div><div class="fa-head"></div></div>`;
+
+  let html = `<div class="flow-wrap">`;
+  if (data.title) html += `<p class="flow-title">${data.title}</p>`;
+
+  groups.forEach((group, gi) => {
+    html += `<div class="flow-group">`;
+    if (group.label) html += `<p class="flow-group-label">${group.label}</p>`;
+    group.steps.forEach((step, si) => {
+      const cls = step.highlight ? 'flow-node hi' : (step.type === 'decision' ? 'flow-node decision' : 'flow-node');
+      html += `<div class="${cls}">${step.label}</div>`;
+      if (si < group.steps.length - 1) html += arrow();
+    });
+    html += `</div>`;
+    if (gi < groups.length - 1) html += groupArrow();
+  });
+
+  html += `</div>`;
+  return html;
+}
+
+/* ═══ HERO INTERACTIVE SYSTEM ═════════════════════════════════════════════ */
+(function heroSystem() {
+
+// Custom cursor
+const cRing = document.createElement('div'); cRing.id = 'c-ring';
+const cDot  = document.createElement('div'); cDot.id  = 'c-dot';
+document.body.appendChild(cRing);
+document.body.appendChild(cDot);
+
+let mx = -300, my = -300, rx = -300, ry = -300;
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cDot.style.left = mx + 'px'; cDot.style.top = my + 'px';
+});
+(function lagRing() {
+  rx += (mx-rx)*0.22; ry += (my-ry)*0.22;
+  cRing.style.left = rx+'px'; cRing.style.top = ry+'px';
+  requestAnimationFrame(lagRing);
+})();
+
+// Cursor expand on hover
+document.querySelectorAll('a,button,.blog-card,.cs-card,.tl-card,.off-card').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cRing.style.width = '56px'; cRing.style.height = '56px';
+    cRing.style.borderColor = 'rgba(232,160,32,0.95)';
+    cRing.style.background  = 'rgba(232,160,32,0.06)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cRing.style.width = '38px'; cRing.style.height = '38px';
+    cRing.style.borderColor = 'rgba(232,160,32,0.55)';
+    cRing.style.background  = 'transparent';
+  });
+});
+
+// ── CANVAS PARTICLE FIELD ──────────────────────────────────────────────────
+const canvas = document.getElementById('hero-canvas');
+if (!canvas) return;
+const ctx = canvas.getContext('2d');
+
+const TERMS = [
+  'Product Manager','Roadmap','PRD','User Story','Sprint','Backlog','OKRs',
+  'North Star','Activation','Retention','Churn','LTV','CAC','DAU','MAU',
+  'A/B Test','Hypothesis','Funnel','Conversion','NPS','CSAT','Cohort',
+  'MVP','GTM','Discovery','Delivery','Iteration','Stakeholder','Persona',
+  'Jobs-to-be-done','Pain Point','Insight','Prioritise','Trade-off',
+  'Data-driven','Impact','Velocity','Adoption','Friction','Outcome',
+  '0→1','Go-to-Market','Feature Flag','Root Cause','KPI','Metric'
+];
+
+let W, H, parts = [];
+
+function resize() {
+  W = canvas.width  = canvas.offsetWidth  || window.innerWidth;
+  H = canvas.height = canvas.offsetHeight || window.innerHeight;
+}
+
+function makeParticle(initial) {
+  return {
+    x: Math.random()*(W||800),
+    y: initial ? Math.random()*(H||600) : (Math.random()>0.5 ? -20 : (H||600)+20),
+    vx: (Math.random()-0.5)*0.35,
+    vy: (Math.random()-0.5)*0.35,
+    label: TERMS[Math.floor(Math.random()*TERMS.length)],
+    a: Math.random()*0.35+0.18,
+    ta: 0,
+    fs: Math.random()*4+11,
+    near: false
+  };
+}
+
+function initParts() {
+  parts = [];
+  var n = Math.min(32, Math.floor((W*H)/26000));
+  for(var i=0;i<n;i++) parts.push(makeParticle(true));
+}
+
+var heroMx=-999, heroMy=-999, heroActive=false;
+var cursorSpeed=0, prevHeroMx=-999, prevHeroMy=-999; // velocity tracking
+var heroEl = document.getElementById('hero');
+if(heroEl) {
+  heroEl.addEventListener('mousemove', function(e){ heroMx=e.clientX; heroMy=e.clientY; heroActive=true; });
+  heroEl.addEventListener('mouseleave', function(){ heroActive=false; cursorSpeed=0; });
+}
+
+function tickParticle(p) {
+  if(heroActive) {
+    // Update cursor speed — decays each frame so particles settle when cursor stops
+    var rawSpeed = Math.hypot(heroMx - prevHeroMx, heroMy - prevHeroMy);
+    cursorSpeed = cursorSpeed * 0.75 + rawSpeed * 0.25; // smooth
+    prevHeroMx = heroMx; prevHeroMy = heroMy;
+
+    var rect=canvas.getBoundingClientRect();
+    var cx=heroMx-rect.left, cy=heroMy-rect.top;
+    var dx=cx-p.x, dy=cy-p.y, d=Math.sqrt(dx*dx+dy*dy);
+    if(d<140 && d>0) {
+      // Attraction scales with cursor speed — stops when cursor is stationary
+      var speedFactor = Math.min(1, cursorSpeed / 6);
+      var f=(140-d)/140*0.008*speedFactor;
+      p.vx+=dx*f; p.vy+=dy*f;
+      p.near = speedFactor > 0.05; // only "near" when actually moving
+      p.ta = p.near ? Math.min(0.92,p.a+0.45) : Math.random()*0.22+0.07;
+    } else { p.near=false; p.ta=Math.random()*0.22+0.07; }
+  }
+  p.a+=(p.ta-p.a)*0.14;
+  p.vx*=0.94;  p.vy*=0.94;
+  if(!p.near){p.vx+=(Math.random()-0.5)*0.014; p.vy+=(Math.random()-0.5)*0.014;}
+  var sp=Math.hypot(p.vx,p.vy);
+  if(sp>1.6){p.vx=p.vx/sp*1.6; p.vy=p.vy/sp*1.6;}
+  p.x+=p.vx; p.y+=p.vy;
+  if(p.x<-120)p.x=W+60; if(p.x>W+120)p.x=-60;
+  if(p.y<-40) p.y=H+20; if(p.y>H+50) p.y=-20;
+}
+
+function drawParticle(p) {
+  ctx.save();
+  ctx.globalAlpha=p.a;
+  ctx.font=p.fs+'px Outfit,monospace';
+  ctx.fillStyle=p.near?'#E8A020':'rgba(180,200,230,1)';
+  ctx.fillText(p.label,p.x,p.y);
+  ctx.restore();
+}
+
+function drawLines() {
+  if(!heroActive) return;
+  var rect=canvas.getBoundingClientRect();
+  var cx=heroMx-rect.left, cy=heroMy-rect.top;
+  // Cursor glow
+  var g=ctx.createRadialGradient(cx,cy,0,cx,cy,130);
+  g.addColorStop(0,'rgba(232,160,32,0.07)');
+  g.addColorStop(1,'transparent');
+  ctx.fillStyle=g;
+  ctx.beginPath(); ctx.arc(cx,cy,130,0,Math.PI*2); ctx.fill();
+  // Connections
+  for(var i=0;i<parts.length;i++) {
+    for(var j=i+1;j<parts.length;j++) {
+      var dx=parts[i].x-parts[j].x, dy=parts[i].y-parts[j].y;
+      var d=Math.hypot(dx,dy);
+      if(d<145) {
+        var a=(1-d/145)*0.22;
+        var d1=Math.hypot(parts[i].x-cx,parts[i].y-cy);
+        var d2=Math.hypot(parts[j].x-cx,parts[j].y-cy);
+        var hot=d1<220||d2<220;
+        ctx.beginPath();
+        ctx.moveTo(parts[i].x,parts[i].y);
+        ctx.lineTo(parts[j].x,parts[j].y);
+        ctx.strokeStyle=hot?'rgba(232,160,32,'+(a*1.9)+')':'rgba(140,155,181,'+(a*0.5)+')';
+        ctx.lineWidth=hot?0.9:0.35;
+        ctx.stroke();
+      }
+    }
+  }
+}
+
+(function loop(){
+  ctx.clearRect(0,0,W,H);
+  parts.forEach(function(p){tickParticle(p);drawParticle(p);});
+  drawLines();
+  requestAnimationFrame(loop);
+})();
+
+window.addEventListener('resize', function(){resize();initParts();});
+resize(); initParts();
+
+// ── NAME SCRAMBLE ──────────────────────────────────────────────────────────
+var POOL='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&';
+var TARGET='Prashant Singh';
+var nameEl=document.getElementById('hero-name');
+if(nameEl) {
+  nameEl.innerHTML=TARGET.split('').map(function(ch){
+    return ch===' '?'<span style="display:inline-block;width:0.3em">&nbsp;</span>':'<span class="n-char">'+ch+'</span>';
+  }).join('');
+  var chars=nameEl.querySelectorAll('.n-char');
+  setTimeout(function(){
+    chars.forEach(function(span,i){
+      var real=span.textContent;
+      var total=8+i*3+Math.floor(Math.random()*6);
+      var tick=0;
+      var iv=setInterval(function(){
+        if(tick<total){
+          span.textContent=POOL[Math.floor(Math.random()*POOL.length)];
+          span.className='n-char scrambling'; tick++;
+        } else {
+          span.textContent=real; span.className='n-char done';
+          clearInterval(iv);
+        }
+      },42);
+    });
+  },300);
+}
+
+// ── ARC TYPEWRITER ─────────────────────────────────────────────────────────
+var ARC_BASE='Engineer \u2192 Ops \u2192 Growth \u2192 Product \u2192 ';
+var ARC_HI='AI PM (in progress)';
+var arcEl=document.getElementById('hero-arc');
+if(arcEl) {
+  setTimeout(function(){
+    var i=0;
+    var iv1=setInterval(function(){
+      if(i<=ARC_BASE.length){
+        arcEl.innerHTML=ARC_BASE.slice(0,i)+'<span class="arc-cur">|</span>';
+        i++;
+      } else {
+        clearInterval(iv1);
+        var j=0;
+        var iv2=setInterval(function(){
+          if(j<=ARC_HI.length){
+            arcEl.innerHTML=ARC_BASE+'<span style="color:var(--amber)">'+ARC_HI.slice(0,j)+'</span><span class="arc-cur">|</span>';
+            j++;
+          } else {
+            arcEl.innerHTML=ARC_BASE+'<span style="color:var(--amber)">'+ARC_HI+'</span>';
+            clearInterval(iv2);
+          }
+        },52);
+      }
+    },36);
+  },1300);
+}
+
+// ── 3D TILT ────────────────────────────────────────────────────────────────
+var hero3d=document.getElementById('hero3d');
+if(hero3d && heroEl) {
+  heroEl.addEventListener('mousemove',function(e){
+    var r=heroEl.getBoundingClientRect();
+    var x=(e.clientX-r.left)/r.width-0.5;
+    var y=(e.clientY-r.top)/r.height-0.5;
+    hero3d.style.transform='perspective(1100px) rotateX('+(-y*7)+'deg) rotateY('+(x*7)+'deg)';
+  });
+  heroEl.addEventListener('mouseleave',function(){
+    hero3d.style.transform='perspective(1100px) rotateX(0deg) rotateY(0deg)';
+  });
+}
+
+// ── MAGNETIC BUTTONS ───────────────────────────────────────────────────────
+document.querySelectorAll('.mag-wrap').forEach(function(wrap){
+  wrap.addEventListener('mousemove',function(e){
+    var r=wrap.getBoundingClientRect();
+    var dx=e.clientX-(r.left+r.width/2);
+    var dy=e.clientY-(r.top+r.height/2);
+    wrap.style.transform='translate('+(dx*0.28)+'px,'+(dy*0.28)+'px)';
+  });
+  wrap.addEventListener('mouseleave',function(){
+    wrap.style.transform='translate(0,0)';
+  });
+});
+
+})();
+
+
+/* ═══ END HERO SYSTEM ══════════════════════════════════════════════════════ */
+
+
+// ── TOUCH: move particles toward finger ──────────────────────────────────
+document.addEventListener('touchmove', function(e){
+  if(e.touches.length > 0){
+    heroMx = e.touches[0].clientX;
+    heroMy = e.touches[0].clientY;
+    heroActive = true;
+  }
+}, { passive: true });
+document.addEventListener('touchend', function(){ heroActive = false; }, { passive: true });
+
+// ── HIDE custom cursor on touch devices ─────────────────────────────────
+document.addEventListener('touchstart', function(){
+  document.body.style.cursor = '';
+  var r = document.getElementById('c-ring');
+  var d = document.getElementById('c-dot');
+  if(r) r.style.display = 'none';
+  if(d) d.style.display = 'none';
+}, { once: true });
+
+// ── HAMBURGER ────────────────────────────────────────────────────────────
+function toggleMenu(){
+  var btn  = document.getElementById('ham-btn');
+  var menu = document.getElementById('mobile-menu');
+  var open = menu.classList.toggle('open');
+  btn.classList.toggle('open', open);
+}
+function closeMenu(){
+  document.getElementById('ham-btn').classList.remove('open');
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+document.addEventListener('click', function(e){
+  var btn  = document.getElementById('ham-btn');
+  var menu = document.getElementById('mobile-menu');
+  if(menu && menu.classList.contains('open') && !menu.contains(e.target) && e.target !== btn && !btn.contains(e.target)){
+    closeMenu();
+  }
+});
+</script>
+</body>
+</html>

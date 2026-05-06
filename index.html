@@ -710,6 +710,15 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     <h1 class="dump-heading">Paste your brain dump</h1>
     <p class="dump-sub">Choose a provider, pick a model, paste your notes. Gemini and Groq are both free — switch if one hits a quota limit.</p>
 
+    <!-- Write key — entered once per session, never stored in code -->
+    <div style="background:rgba(232,160,32,0.06);border:1px solid rgba(232,160,32,0.2);border-radius:8px;padding:0.85rem 1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+      <label style="font-size:0.72rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--amber);white-space:nowrap;">Publish key</label>
+      <input type="password" id="sb-write-key-input" placeholder="Enter Supabase write key to enable publishing"
+        style="flex:1;min-width:200px;background:#0a0e1c;border:1px solid #1a2540;color:var(--text-1);padding:0.45rem 0.75rem;border-radius:5px;font-size:0.8rem;font-family:'Outfit',sans-serif;"
+        oninput="sessionStorage.setItem('sb_write_key', this.value.trim())"/>
+      <span style="font-size:0.68rem;color:var(--text-3);">Stored in session only — not saved to HTML</span>
+    </div>
+
     <!-- Provider selector -->
     <label class="dump-label" style="margin-bottom:0.5rem;">AI Provider</label>
     <div class="provider-row">
@@ -921,12 +930,16 @@ const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 // Write key — NOT stored in HTML. Prompted once per session in dump tool.
 // Uses service_role JWT which bypasses RLS — only you have this.
 function getWriteKey() {
-  let key = sessionStorage.getItem('sb_write_key');
-  if (!key) {
-    key = window.prompt('Enter your Supabase write key to publish:');
-    if (!key) throw new Error('Write key required to publish.');
-    sessionStorage.setItem('sb_write_key', key.trim());
+  // Check the input field first (most current value)
+  const inputEl = document.getElementById('sb-write-key-input');
+  if (inputEl && inputEl.value.trim()) {
+    const key = inputEl.value.trim();
+    sessionStorage.setItem('sb_write_key', key);
+    return key;
   }
+  // Fall back to sessionStorage (if key entered in a previous call)
+  const key = sessionStorage.getItem('sb_write_key');
+  if (!key) throw new Error('Enter your Supabase write key in the field above before publishing.');
   return key;
 }
 
@@ -1669,7 +1682,9 @@ function discardPreview() {
 
 function resetWriteKey() {
   sessionStorage.removeItem('sb_write_key');
-  setStatus('Write key cleared — will prompt again on next publish.', '');
+  const inputEl = document.getElementById('sb-write-key-input');
+  if (inputEl) inputEl.value = '';
+  setStatus('Write key cleared — enter it again in the field above.', '');
 }
 
 function setStatus(msg, type) {

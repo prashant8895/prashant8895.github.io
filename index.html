@@ -720,6 +720,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <button onclick="testSupabaseConnection()" style="background:#1a2540;border:1px solid #2e3d5e;color:var(--text-1);padding:0.45rem 0.9rem;border-radius:5px;font-size:0.78rem;font-family:'Outfit',sans-serif;cursor:pointer;white-space:nowrap;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='#2e3d5e'">Test connection</button>
       <span style="font-size:0.68rem;color:var(--text-3);">Stored in session only — not saved to HTML</span>
     </div>
+    <p class="dump-status" id="connection-status" style="margin-top:0.5rem;margin-bottom:0;"></p>
 
     <!-- Provider selector -->
     <label class="dump-label" style="margin-bottom:0.5rem;">AI Provider</label>
@@ -926,7 +927,7 @@ const DEFAULT_POSTS = [
 /* ════════════════════════════════════════════════════════════════════════
    POSTS STORE: Supabase JS client — handles CORS correctly
    ════════════════════════════════════════════════════════════════════════ */
-const SB_URL  = 'https://exsmklravnkoordfvsh.supabase.co';
+const SB_URL  = 'https://exsmkilravnkoordfvsh.supabase.co';
 const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4c21raWxyYXZua29vcmRmdnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNDM2ODAsImV4cCI6MjA5MzYxOTY4MH0.YwfPeNlNE8ecF8jnkozfV9MY40YDoPo_t2GXyc5sy04';
 
 // Read client — uses anon key, always available
@@ -1665,50 +1666,65 @@ function resetWriteKey() {
 }
 
 async function testSupabaseConnection() {
-  setPublishStatus('Testing connection…', '');
-  const results = [];
+  const statusEl = document.getElementById('connection-status');
+  const set = (msg, type) => {
+    if (!statusEl) return;
+    statusEl.textContent = msg;
+    statusEl.className = 'dump-status' + (type ? ' ' + type : '');
+  };
 
-  // ── TEST 1: Read (anon key) ──────────────────────────────────────────────
+  // STEP 0: Basic internet fetch works at all?
+  set('Testing basic network…', '');
   try {
-    const { data, error } = await sbRead.from('posts').select('created_at').limit(1);
-    if (error) throw error;
-    results.push('✅ Read: OK');
+    await fetch('https://httpbin.org/get', { signal: AbortSignal.timeout(5000) });
+    set('✅ Internet OK — now testing Supabase…', '');
   } catch(e) {
-    results.push('❌ Read failed: ' + e.message);
-    setPublishStatus(results.join(' · '), 'error');
+    set('❌ Basic network failed: ' + e.message + ' — check your internet connection', 'error');
     return;
   }
 
-  // ── TEST 2: Write key present ────────────────────────────────────────────
+  // STEP 1: Can we reach the Supabase domain at all?
+  set('✅ Internet OK — pinging Supabase…', '');
+  try {
+    const res = await fetch(
+      SB_URL + '/rest/v1/posts?select=created_at&limit=1',
+      { headers: { 'apikey': SB_ANON_KEY, 'Authorization': 'Bearer ' + SB_ANON_KEY },
+        signal: AbortSignal.timeout(8000) }
+    );
+    if (res.status === 404) {
+      set('❌ Table "posts" not found — run the SQL to create it again', 'error'); return;
+    }
+    if (res.status === 401 || res.status === 403) {
+      set('❌ Auth error ' + res.status + ' — check anon key', 'error'); return;
+    }
+    if (!res.ok) {
+      const txt = await res.text();
+      set('❌ Supabase error ' + res.status + ': ' + txt.substring(0,120), 'error'); return;
+    }
+    set('✅ Internet OK · ✅ Supabase reachable · ✅ Table exists — testing write…', '');
+  } catch(e) {
+    // Show the exact URL so user can test manually
+    set('❌ Cannot reach Supabase. URL tried: ' + SB_URL + ' — Error: ' + e.message + '. Open this URL in a new tab to test manually.', 'error');
+    return;
+  }
+
+  // STEP 2: Write key
   let writeClient;
   try {
     writeClient = getWriteClient();
-    results.push('✅ Write key: found');
   } catch(e) {
-    results.push('❌ Write key: ' + e.message);
-    setPublishStatus(results.join(' · '), 'error');
-    return;
+    set('✅ Read OK · ❌ ' + e.message, 'error'); return;
   }
 
-  // ── TEST 3: Write (insert a test row then immediately delete it) ─────────
+  // STEP 3: Write + delete
   try {
     const testPost = { id: 'test-' + Date.now(), title: '__connection_test__' };
-    const { error: insertErr } = await writeClient
-      .from('posts')
-      .insert({ post_json: testPost });
+    const { error: insertErr } = await writeClient.from('posts').insert({ post_json: testPost });
     if (insertErr) throw insertErr;
-
-    // Clean up — delete the test row
-    await writeClient
-      .from('posts')
-      .delete()
-      .eq('post_json->>id', testPost.id);
-
-    results.push('✅ Write: OK');
-    setPublishStatus(results.join(' · ') + ' — ready to publish!', 'success');
+    await writeClient.from('posts').delete().eq('post_json->>id', testPost.id);
+    set('✅ Internet OK · ✅ Supabase OK · ✅ Read OK · ✅ Write OK — ready to publish!', 'success');
   } catch(e) {
-    results.push('❌ Write failed: ' + e.message);
-    setPublishStatus(results.join(' · '), 'error');
+    set('✅ Read OK · ❌ Write failed: ' + e.message, 'error');
   }
 }
 

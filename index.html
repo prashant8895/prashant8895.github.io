@@ -683,6 +683,12 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     <label class="dump-label" style="margin-bottom:0.5rem;">Model</label>
     <div class="model-row" id="model-row"></div>
 
+    <label class="dump-label" style="margin-bottom:0.5rem;">What are you creating?</label>
+    <div style="display:flex;gap:0.75rem;margin-bottom:1.75rem;" id="dump-type-row">
+      <button id="dump-type-blog" class="dump-cat-btn selected" onclick="selectDumpType('blog')" style="padding:0.6rem 1.4rem;font-size:0.85rem;">✍️ Blog Post</button>
+      <button id="dump-type-cs"   class="dump-cat-btn"          onclick="selectDumpType('cs')"   style="padding:0.6rem 1.4rem;font-size:0.85rem;">📋 Case Study</button>
+    </div>
+
     <label class="dump-label">Your raw notes</label>
     <textarea id="dump-input" class="dump-textarea" placeholder="Paste anything here — a half-written thought, a post-meeting reflection, a rough outline, a voice transcript. No need to clean it up first."></textarea>
 
@@ -693,6 +699,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     </div>
     <p style="font-size:0.72rem;color:var(--text-3);margin-top:-1.25rem;margin-bottom:1.75rem;">When an image is attached, the AI reads it and incorporates what it shows — including a recreated diagram.</p>
 
+    <div id="dump-tag-section">
     <label class="dump-label" style="margin-bottom:0.5rem;">What kind of thought is this?</label>
     <div class="dump-tags" id="dump-tags">
       <button class="dump-tag selected" data-tag="Project Retrospective">Project Retrospective</button>
@@ -702,6 +709,8 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <button class="dump-tag" data-tag="Quick Thought">Quick Thought</button>
       <button class="dump-tag" data-tag="Book / Article Reaction">Book / Article Reaction</button>
     </div>
+
+    </div><!-- /dump-tag-section -->
 
     <button class="dump-process-btn" id="dump-btn" onclick="processDump()">
       <span id="dump-btn-text">Process with AI</span>
@@ -717,6 +726,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         <label>Title</label>
         <input type="text" id="prev-title" class="dump-field-input"/>
       </div>
+      <div id="blog-preview-fields">
       <div class="dump-field">
         <label>Teaser (2 sentences shown on the blog card)</label>
         <textarea id="prev-teaser" class="dump-field-textarea" rows="3"></textarea>
@@ -741,14 +751,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         <label>Takeaway (one punchy closing line — shown as highlighted quote)</label>
         <input type="text" id="prev-takeaway" class="dump-field-input"/>
       </div>
-      <!-- Dump type: Blog or Case Study -->
-      <div class="dump-field">
-        <label>What are you creating? <span style="color:#f87171;font-size:0.7rem;">required</span></label>
-        <div style="display:flex;gap:0.6rem;margin-top:0.1rem;">
-          <button id="dump-type-blog" class="dump-cat-btn selected" onclick="selectDumpType('blog')">✍️ Blog Post</button>
-          <button id="dump-type-cs"   class="dump-cat-btn"          onclick="selectDumpType('cs')">📋 Case Study</button>
-        </div>
-      </div>
+      </div><!-- /blog-preview-fields -->
 
       <!-- CS-only fields (hidden when blog mode) -->
       <div id="cs-fields" style="display:none;">
@@ -1006,7 +1009,7 @@ async function deleteStoredPost(id) {
 function getStoredPosts() { return _sbPosts; }
 
 function getAllPosts() {
-  return [..._sbPosts, ...DEFAULT_POSTS];
+  return [..._sbPosts.filter(p => !p.hidden), ...DEFAULT_POSTS];
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1218,6 +1221,62 @@ async function deleteCS(id) {
   _sbCS = _sbCS.filter(cs => cs.id !== id);
 }
 
+async function toggleHidePost(id) {
+  const post = _sbPosts.find(p => p.id === id);
+  if (!post) return;
+  post.hidden = !post.hidden;
+  const client = getWriteClient();
+  const { error } = await client
+    .from('posts')
+    .update({ post_json: post })
+    .eq('post_json->>id', id);
+  if (error) {
+    post.hidden = !post.hidden; // revert
+    if (error.message.includes('permission') || error.code === '42501') {
+      throw new Error('UPDATE policy missing in Supabase — run the SQL fix in your Supabase SQL editor.');
+    }
+    throw new Error(error.message);
+  }
+  renderBlog();
+  renderDumpPostsList();
+}
+
+async function toggleHideCS(id) {
+  const cs = _sbCS.find(x => x.id === id);
+  if (!cs) return;
+  cs.hidden = !cs.hidden;
+  const client = getWriteClient();
+  const { error } = await client
+    .from('case_studies')
+    .update({ cs_json: cs })
+    .eq('cs_json->>id', id);
+  if (error) { cs.hidden = !cs.hidden; throw new Error(error.message); }
+  renderCS();
+  renderDumpCSList();
+}
+
+async function updateStoredPost(post) {
+  const client = getWriteClient();
+  const { error } = await client
+    .from('posts')
+    .update({ post_json: post })
+    .eq('post_json->>id', post.id);
+  if (error) throw new Error(error.message);
+  const idx = _sbPosts.findIndex(p => p.id === post.id);
+  if (idx !== -1) _sbPosts[idx] = post;
+}
+
+async function updateStoredCS(cs) {
+  const client = getWriteClient();
+  const { error } = await client
+    .from('case_studies')
+    .update({ cs_json: cs })
+    .eq('cs_json->>id', cs.id);
+  if (error) throw new Error(error.message);
+  const idx = _sbCS.findIndex(x => x.id === cs.id);
+  if (idx !== -1) _sbCS[idx] = cs;
+}
+
 const ACCENT_COLORS = ['#E8A020','#60A5FA','#34D399','#FB923C','#A78BFA','#F472B6','#38BDF8'];
 
 function renderCS() {
@@ -1227,7 +1286,12 @@ function renderCS() {
     grid.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem;font-style:italic;grid-column:1/-1;text-align:center;padding:2rem 0;">No case studies yet — add one via the dump tool at <a href="#dump" style="color:var(--amber)">/#dump</a></p>';
     return;
   }
-  grid.innerHTML = _sbCS.map((cs, i) => {
+  const visibleCS = _sbCS.filter(cs => !cs.hidden);
+  if (!visibleCS.length) {
+    grid.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem;font-style:italic;grid-column:1/-1;text-align:center;padding:2rem 0;">No case studies yet — add one via the dump tool at <a href="#dump" style="color:var(--amber)">/#dump</a></p>';
+    return;
+  }
+  grid.innerHTML = visibleCS.map((cs, i) => {
     const acc = cs.color || ACCENT_COLORS[i % ACCENT_COLORS.length];
     const wins = (cs.wins || []).map(w =>
       `<div class="cs-win"><div class="win-dot" style="background:${acc};"></div>${w}</div>`
@@ -1296,21 +1360,25 @@ function selectCSColor(hex) {
 
 function selectDumpType(type) {
   selectedDumpType = type;
-  document.getElementById('dump-type-blog').classList.toggle('selected', type === 'blog');
-  document.getElementById('dump-type-cs').classList.toggle('selected', type === 'cs');
-  // Show/hide relevant fields
-  const csFields = document.getElementById('cs-fields');
-  const blogCat  = document.getElementById('blog-cat-field');
-  if(csFields)  csFields.style.display  = type==='cs'   ? 'block' : 'none';
-  if(blogCat)   blogCat.style.display   = type==='blog' ? 'block' : 'none';
-  // Hide blog-only fields when CS
-  ['prev-tags','prev-img-caption','prev-diagram','prev-tech'].forEach(function(id){
-    const el = document.getElementById(id);
-    if(el) el.closest('.dump-field').style.display = type==='cs' ? 'none' : 'block';
-  });
-  // Show/hide tag row
-  const tagRow = document.getElementById('dump-tag-row');
-  if (tagRow) tagRow.style.display = type === 'blog' ? '' : 'none';
+  var isBlog = type === 'blog';
+
+  // Toggle type buttons
+  document.getElementById('dump-type-blog').classList.toggle('selected', isBlog);
+  document.getElementById('dump-type-cs').classList.toggle('selected', !isBlog);
+
+  // Show/hide tag chips (blog only)
+  var tagSection = document.getElementById('dump-tag-section');
+  if (tagSection) tagSection.style.display = isBlog ? '' : 'none';
+
+  // Show/hide blog category field (blog only)
+  var blogCat = document.getElementById('blog-cat-field');
+  if (blogCat) blogCat.style.display = isBlog ? 'block' : 'none';
+
+  // Show/hide blog preview fields vs CS fields (only matters after AI runs)
+  var blogFields = document.getElementById('blog-preview-fields');
+  var csFields   = document.getElementById('cs-fields');
+  if (blogFields) blogFields.style.display = isBlog ? 'block' : 'none';
+  if (csFields)   csFields.style.display   = isBlog ? 'none'  : 'block';
 }
 
 // ── PROVIDER / MODEL CONFIG ─────────────────────────────────────────────────
@@ -1600,8 +1668,8 @@ async function processDump() {
 
   // ── CASE STUDY PATH ─────────────────────────────────────────────────────
   if (selectedDumpType === 'cs') {
-    const csPrompt = `You are a ghostwriter for a Senior Product Manager with multiple years across fintech, e-commerce, B2C services, logistics and tech. He writes for PMs, builders, and founders — people who think in systems but feel in stories.
-
+    const csPrompt = `You are a ghostwriter for a Senior Product Manager with multiple years in domains like fintech, e-commerce, B2C services, logistics, and tech.
+He writes for PMs, builders, and founders — people who think in systems but feel in stories.
 His voice is:
 - Conversational but never casual to the point of losing depth
 - Direct. No throat-clearing. No "In today's fast-paced world..."
@@ -1609,7 +1677,25 @@ His voice is:
 - He makes the reader feel like they're hearing this over coffee, not reading a LinkedIn post
 - He doesn't hedge. He has a point of view.
 
-YOUR JOB: Take the raw notes and turn them into a PM case study.
+YOUR JOB:
+Take the raw notes below and turn them into a PM case study.
+
+The "narrative" field must follow this structure exactly:
+1. HOOK (2-3 lines max) — drop the reader into a moment, a tension, or a surprising claim. No context yet. Make them need to read the next line.
+2. THE SETUP — what was the situation? Ground it in reality. Keep it tight.
+3. THE PROBLEM / TENSION — what was broken, confusing, or counterintuitive? This is where the reader goes "oh I've felt this too."
+4. THE UNFOLDING — what happened? Walk through it like a story, not a report. Use specifics. Numbers, conversations, small details make it real.
+5. THE TURN — the moment things clicked, broke, or changed. Every good story has one.
+6. THE LESSON / TAKEAWAY — one sharp, transferable insight. Not a list. One thing, said well.
+7. CLOSE — end with a question, a provocation, or a quiet mic drop. Something that lingers.
+
+Rules for narrative:
+- No bullet points in the narrative body. Prose only.
+- No jargon unless it's explained or the audience clearly knows it
+- Max 600-800 words unless the story demands more
+- Every paragraph should earn the next one
+- Do not start with "I" as the very first word
+- Do not use the phrase "game-changer", "learnings", "double-click", or "unpack"
 
 Return ONLY valid JSON — no fences, no preamble:
 {
@@ -1622,7 +1708,7 @@ Return ONLY valid JSON — no fences, no preamble:
   "problem_long": "2-3 sentences expanding on the problem with real context and stakes.",
   "insight": "The non-obvious realisation that made everything else possible. Sharp, specific, transferable.",
   "what_i_built": "What was actually shipped. Concrete. No fluff.",
-  "narrative": "The story of how this happened. Follow this structure: HOOK (2-3 lines — drop into a moment or tension, no context yet), THE SETUP (situation grounded in reality), THE PROBLEM/TENSION (what was broken or counterintuitive), THE UNFOLDING (what happened — use specifics, numbers, small details), THE TURN (moment things clicked or changed), THE LESSON (one sharp transferable insight — not a list), CLOSE (question, provocation, or quiet mic drop). Rules: no bullet points in narrative body, prose only, no jargon unless explained, max 600-800 words, every paragraph earns the next, do not start with 'I', do not use game-changer/learnings/double-click/unpack.",
+  "narrative": "The full story following the 7-part structure above. Prose only. 600-800 words.",
   "result": "The outcomes. Metrics first, then broader impact."
 }
 
@@ -1631,62 +1717,60 @@ ${raw}`;
 
     setStatus('Processing case study…', '');
     try {
-      const textMessages = [{ role: 'user', content: csPrompt }];
-      const rawResp = await callAI(csPrompt, null, null);
-      const parsed = safeParseJSON(rawResp);
+      const result = await callAI(csPrompt, null, null);
+      const parsed = result.parsed;
+      if (!parsed || !parsed.title) throw new Error('AI returned empty or invalid response — try again or switch model.');
       currentDraft = { ...parsed, _type: 'cs' };
       populateCSPreview(parsed);
       document.getElementById('dump-preview').classList.add('show');
       setStatus('Done ✓ — review and publish when ready', 'success');
     } catch(err) {
       setStatus('Error: ' + (err.message || 'Something went wrong.'), 'error');
+      console.error('CS processDump error:', err);
     } finally {
       btn.disabled = false; btnText.textContent = 'Process with AI'; spinner.style.display = 'none';
     }
     return; // don't run blog path
   }
 
-  const textPrompt = `You are a ghostwriter for a Senior Product Manager with multiple years in domains like fintech, e-commerce, B2C services, logistics, and tech.
-He writes for PMs, builders, and founders — people who think in systems but feel in stories.
-His voice is:
-- Conversational but never casual to the point of losing depth
-- Direct. No throat-clearing. No "In today's fast-paced world..."
-- He uses "I" and lived experience, but the insight is always transferable
-- He makes the reader feel like they're hearing this over coffee, not reading a LinkedIn post
-- He doesn't hedge. He has a point of view.
+  const textPrompt = `You are a world-class storyteller writing as Prashant Singh — a Product Manager at Zeta (HDFC Pixel credit card), previously at Purplle and Urban Company. Engineering background. Direct, specific, honest, wry. Not corporate.
 
-YOUR JOB:
-Take the raw notes below and turn them into a narrative blog post.
+BEFORE WRITING — diagnose the soul of this story. Choose ONE tone: sharp & punchy / dry & witty / raw & unfiltered / warm & intimate / lyrical & slow. Choose ONE structure: could start at the end, orbit a central image, be one long zoomed-in moment. Commit fully.
 
-Structure:
-1. HOOK (2-3 lines max) — drop the reader into a moment, a tension, or a surprising claim. No context yet. Make them need to read the next line.
-2. THE SETUP — what was the situation? Ground it in reality. Keep it tight.
-3. THE PROBLEM / TENSION — what was broken, confusing, or counterintuitive? This is where the reader goes "oh I've felt this too."
-4. THE UNFOLDING — what happened? Walk through it like a story, not a report. Use specifics. Numbers, conversations, small details make it real.
-5. THE TURN — the moment things clicked, broke, or changed. Every good story has one.
-6. THE LESSON / TAKEAWAY — one sharp, transferable insight. Not a list. One thing, said well.
-7. CLOSE — end with a question, a provocation, or a quiet mic drop. Something that lingers.
+WRITING RULES:
+- Open with impact — first line must be impossible to stop after
+- Every sentence moves the story forward, deepens emotion, or reveals something new
+- Name real things: Pixel card, CBR automation, NLP intent classification, RBI compliance, Purplle storefront. Use real numbers.
+- No filler words, no throat-clearing, no "In today's world..."
+- Bullets are allowed ONLY where they genuinely improve readability — e.g. a list of tools, a stack, a set of distinct steps. Never use bullets just to break up prose. Prose is the default.
+- Do not start with "I". Do not use: game-changer, learnings, double-click, unpack
+- Length is dictated by the story, not a word count. A complex multi-step journey with real stakes deserves 1200+ words. A single sharp insight deserves 400. Never pad. Never truncate a story that isn't done. The rule: every paragraph must earn the next — if it does, keep writing.
 
-Rules:
-- No bullet points in the post body. Prose only.
-- No jargon unless it's explained or the audience clearly knows it
-- Max 600-800 words unless the story demands more
-- Every paragraph should earn the next one. If it doesn't pull the reader forward, cut it.
-- Do not start with "I" as the very first word
-- Do not use the phrase "game-changer", "learnings", "double-click", or "unpack"
-- Output ONLY a JSON object. No markdown fences, no preamble.
+DIAGRAM RULES:
+- If the story involves a process, flow, system, or sequence of steps — include a diagram_steps array.
+- If the story is pure reflection, career, or emotion with no clear process — set diagram_steps to [].
+- Diagram nodes: max 5 plain words per label, no special characters, no brackets or slashes.
+- type: "rect" for normal steps, "decision" for branch/decision points.
+- highlight: true for 2-3 most important nodes only.
+- group: same value for consecutive related nodes (used to colour-group them).
 
+Output ONLY valid JSON, no fences, no preamble:
 {
   "title": "Short punchy title — what actually happened, not a topic label",
-  "teaser": "2 crisp sentences for the blog card. Make them want to click.",
+  "teaser": "2 crisp sentences. Make the reader need to click.",
   "readTime": "X min read",
   "content": {
-    "hook": "The opening 2-3 lines. Drop into a moment. No context yet.",
-    "situation": "The setup. What was the context? Keep it tight.",
-    "turn": "The unfolding + the turn. What happened, then the click moment.",
-    "lesson": "The lesson. One sharp insight. Prose, not a list.",
-    "takeaway": "One punchy closing line that lingers."
-  }
+    "hook": "First 2-3 lines. Drop straight into a moment, image, or tension. No context yet.",
+    "situation": "Ground the story. What was the situation? Be specific.",
+    "turn": "What happened, unfolding honestly. Then the moment things clicked or broke. Specific details.",
+    "lesson": "One sharp insight. Prose or bullets — whichever serves the reader.",
+    "takeaway": "The closing line. A question, provocation, or quiet mic drop.",
+    "tech_section": "Optional. If the post has a tools/stack/process list worth showing in structured form, put it here as clean HTML (ul/li or a simple table). Leave empty string if not needed."
+  },
+  "diagram_title": "3-5 word title for the diagram, or empty string if no diagram",
+  "diagram_steps": [
+    {"label": "Step label max 5 words", "group": "Phase name", "highlight": false, "type": "rect"}
+  ]
 }
 
 RAW NOTES:
@@ -1711,16 +1795,25 @@ Include EVERY node — do not skip any.` : null;
   try {
     setStatus(imageFile ? 'Step 1/2 — writing the post…' : `Writing with ${PROVIDERS[selectedProvider].models.find(m=>m.id===selectedModel)?.name || selectedModel}…`, '');
 
-    const { parsed, diagramTitle, diagramSteps } = await callAI(textPrompt, diagPrompt, imageFile);
+    const { parsed, diagramTitle: imgDiagramTitle, diagramSteps: imgDiagramSteps } = await callAI(textPrompt, diagPrompt, imageFile);
 
-    if (imageFile && diagramSteps.length) setStatus('Step 2/2 — reading the diagram… done ✓', '');
+    if (imageFile && imgDiagramSteps.length) setStatus('Step 2/2 — reading the diagram… done ✓', '');
 
-    currentDraft = { ...parsed, diagram_title: diagramTitle, diagram_steps: diagramSteps };
+    // Prefer diagram from image if present, otherwise use diagram embedded in blog JSON
+    const finalDiagramTitle = (imgDiagramSteps && imgDiagramSteps.length)
+      ? imgDiagramTitle
+      : (parsed.diagram_title || '');
+    const finalDiagramSteps = (imgDiagramSteps && imgDiagramSteps.length)
+      ? imgDiagramSteps
+      : (Array.isArray(parsed.diagram_steps) ? parsed.diagram_steps : []);
+
+    currentDraft = { ...parsed, diagram_title: finalDiagramTitle, diagram_steps: finalDiagramSteps };
     populatePreview(currentDraft);
     document.getElementById('dump-preview').classList.add('show');
+    const stepCount = finalDiagramSteps.length;
     setStatus(
-      imageFile
-        ? `Done ✓  —  post written + ${diagramSteps.length} diagram steps`
+      stepCount
+        ? `Done ✓  —  post written + ${stepCount} diagram steps`
         : 'Done ✓  —  review and publish when ready',
       'success'
     );
@@ -1733,6 +1826,7 @@ Include EVERY node — do not skip any.` : null;
 }
 
 function populatePreview(d) {
+  selectDumpType('blog');  // ensure blog fields shown, CS fields hidden
   document.getElementById('prev-title').value = d.title || '';
   document.getElementById('prev-teaser').value = d.teaser || '';
   document.getElementById('prev-hook').value = d.content?.hook || '';
@@ -1783,18 +1877,64 @@ async function publishCS() {
     result:       document.getElementById('prev-cs-result').value,
     date:         new Date().toISOString().split('T')[0],
   };
-  setPublishStatus('Saving case study…', '');
+  setPublishStatus(editingId ? 'Updating case study…' : 'Saving case study…', '');
   try {
-    await saveCS(cs);
+    if (editingId) {
+      cs.id = editingId;
+      await updateStoredCS(cs);
+      setPublishStatus('Case study updated! Changes are live.', 'success');
+    } else {
+      await saveCS(cs);
+      setPublishStatus('Case study published! Live for all visitors.', 'success');
+    }
+    editingId = null; editingType = null;
     renderCS();
     updateQuadCounts();
     discardPreview();
     document.getElementById('dump-input').value = '';
-    setPublishStatus('Case study published! Live for all visitors.', 'success');
     renderDumpCSList();
   } catch(e) {
     setPublishStatus('Save failed: ' + e.message, 'error');
   }
+}
+
+
+// ── EDIT MODE ────────────────────────────────────────────────────────────────
+let editingId   = null;   // id of post/CS being edited (null = new)
+let editingType = null;   // 'blog' | 'cs'
+
+function editPost(id) {
+  const post = _sbPosts.find(p => p.id === id);
+  if (!post) return;
+  editingId   = id;
+  editingType = 'blog';
+  selectDumpType('blog');
+  // Populate all blog preview fields
+  document.getElementById('prev-title').value       = post.title || '';
+  document.getElementById('prev-teaser').value      = post.teaser || '';
+  document.getElementById('prev-hook').value        = post.content?.hook || '';
+  document.getElementById('prev-situation').value   = post.content?.situation || '';
+  document.getElementById('prev-turn').value        = post.content?.turn || '';
+  document.getElementById('prev-lesson').value      = post.content?.lesson || '';
+  document.getElementById('prev-takeaway').value    = post.content?.takeaway || '';
+  document.getElementById('prev-tags').value        = (post.tags || []).join(', ');
+  document.getElementById('prev-img-caption').value = post.image_caption || '';
+  document.getElementById('prev-tech').value        = post.content?.tech_section || '';
+  // Show preview + edit banner
+  document.getElementById('dump-preview').classList.add('show');
+  setPublishStatus('Editing existing post — changes will overwrite the live version.', '');
+  document.getElementById('dump-preview').scrollIntoView({ behavior: 'smooth' });
+}
+
+function editCS(id) {
+  const cs = _sbCS.find(x => x.id === id);
+  if (!cs) return;
+  editingId   = id;
+  editingType = 'cs';
+  populateCSPreview(cs);
+  document.getElementById('dump-preview').classList.add('show');
+  setPublishStatus('Editing existing case study — changes will overwrite the live version.', '');
+  document.getElementById('dump-preview').scrollIntoView({ behavior: 'smooth' });
 }
 
 async function publishPost() {
@@ -1829,16 +1969,23 @@ async function publishPost() {
         tech_section: document.getElementById('prev-tech').value
       }
     };
-    setPublishStatus('Saving to database…', '');
+    setPublishStatus(editingId ? 'Updating…' : 'Saving to database…', '');
     try {
-      await saveStoredPost(post);
+      if (editingId) {
+        post.id = editingId; // keep original id
+        await updateStoredPost(post);
+        setPublishStatus('Updated! Changes are live.', 'success');
+      } else {
+        await saveStoredPost(post);
+        setPublishStatus('Published! Live for all visitors now.', 'success');
+      }
+      editingId = null; editingType = null;
       renderBlog();
       updateQuadCounts();
       discardPreview();
       document.getElementById('dump-input').value = '';
       document.getElementById('dump-image').value = '';
       document.getElementById('clear-img-btn').style.display = 'none';
-      setPublishStatus('Published! Live for all visitors now.', 'success');
       renderDumpPostsList();
     } catch(e) {
       setPublishStatus('Save failed: ' + e.message, 'error');
@@ -1858,6 +2005,9 @@ async function publishPost() {
 function discardPreview() {
   document.getElementById('dump-preview').classList.remove('show');
   currentDraft = null;
+  editingId = null;
+  editingType = null;
+  setPublishStatus('', '');
 }
 
 function resetWriteKey() {
@@ -1944,15 +2094,20 @@ function setPublishStatus(msg, type) {
 }
 
 function renderDumpPostsList() {
-  const stored = getStoredPosts();
   const section = document.getElementById('dump-posts-section');
   const list = document.getElementById('dump-posts-list');
-  if (!stored.length) { section.style.display = 'none'; return; }
+  if (!_sbPosts.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
-  list.innerHTML = stored.map(p => `
-    <div class="dump-post-row">
-      <span class="dump-post-title-sm">${p.title}</span>
-      <button class="dump-delete-btn" onclick="deleteDumpPost('${p.id}')">Delete</button>
+  list.innerHTML = _sbPosts.map(p => `
+    <div class="dump-post-row" style="opacity:${p.hidden ? 0.45 : 1}">
+      <span class="dump-post-title-sm">${p.title}
+        ${p.hidden ? '<span style="font-size:0.65rem;color:#f87171;margin-left:0.4rem;">HIDDEN</span>' : ''}
+      </span>
+      <div style="display:flex;gap:0.4rem;flex-shrink:0;">
+        <button class="dump-delete-btn" style="background:rgba(96,165,250,0.1);color:#60A5FA;border-color:rgba(96,165,250,0.3);" onclick="editPost('${p.id}')">Edit</button>
+        <button class="dump-delete-btn" style="background:rgba(251,146,60,0.1);color:#FB923C;border-color:rgba(251,146,60,0.3);" onclick="toggleHidePost('${p.id}')">${p.hidden ? 'Show' : 'Hide'}</button>
+        <button class="dump-delete-btn" onclick="deleteDumpPost('${p.id}')">Delete</button>
+      </div>
     </div>
   `).join('');
 }
@@ -1970,9 +2125,16 @@ function renderDumpCSList() {
   if (!_sbCS.length) { section.style.display = 'none'; return; }
   section.style.display = 'block';
   list.innerHTML = _sbCS.map(cs => `
-    <div class="dump-post-row">
-      <span class="dump-post-title-sm">${cs.title} <span style="opacity:0.5;font-size:0.7rem;">${cs.company || ''}</span></span>
-      <button class="dump-delete-btn" onclick="deleteDumpCS('${cs.id}')">Delete</button>
+    <div class="dump-post-row" style="opacity:${cs.hidden ? 0.45 : 1}">
+      <span class="dump-post-title-sm">${cs.title}
+        <span style="opacity:0.5;font-size:0.7rem;">${cs.company || ''}</span>
+        ${cs.hidden ? '<span style="font-size:0.65rem;color:#f87171;margin-left:0.4rem;">HIDDEN</span>' : ''}
+      </span>
+      <div style="display:flex;gap:0.4rem;flex-shrink:0;">
+        <button class="dump-delete-btn" style="background:rgba(96,165,250,0.1);color:#60A5FA;border-color:rgba(96,165,250,0.3);" onclick="editCS('${cs.id}')">Edit</button>
+        <button class="dump-delete-btn" style="background:rgba(251,146,60,0.1);color:#FB923C;border-color:rgba(251,146,60,0.3);" onclick="toggleHideCS('${cs.id}')">${cs.hidden ? 'Show' : 'Hide'}</button>
+        <button class="dump-delete-btn" onclick="deleteDumpCS('${cs.id}')">Delete</button>
+      </div>
     </div>
   `).join('');
 }

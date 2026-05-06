@@ -398,7 +398,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     <a href="#work">Work</a>
     <a href="#blog">Blog</a>
     <a href="#connect">Connect</a>
-    <a href="https://prashant8895.github.io/resume.pdf" class="nav-cta" download="Prashant_Singh_Resume.pdf">Download CV</a>
+    <a href="#" class="nav-cta">Download CV</a>
   </div>
   <button class="ham-btn" id="ham-btn" aria-label="Menu" onclick="toggleMenu()">
     <span></span><span></span><span></span>
@@ -409,7 +409,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <a href="#work"    onclick="closeMenu()">Work</a>
   <a href="#blog"    onclick="closeMenu()">Blog</a>
   <a href="#connect" onclick="closeMenu()">Connect</a>
-  <a href="https://prashant8895.github.io/resume.pdf" class="m-cta" onclick="closeMenu()" download="Prashant_Singh_Resume.pdf">Download CV</a>
+  <a href="#" class="m-cta" onclick="closeMenu()">Download CV</a>
 </div>
 
 <!-- HERO -->
@@ -911,25 +911,92 @@ const DEFAULT_POSTS = [
 ];
 
 /* ════════════════════════════════════════════════════════════════════════
-   POSTS STORE: merges defaults + localStorage posts, newest first
+   POSTS STORE: Supabase backend — posts visible to all visitors instantly
    ════════════════════════════════════════════════════════════════════════ */
-const LS_KEY = 'ps_blog_posts_v1';
+const SB_URL = 'https://exsmklravnkoordfvsh.supabase.co';
+// Anon key — safe to be public, used for reads only
+const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4c21raWxyYXZua29vcmRmdnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNDM2ODAsImV4cCI6MjA5MzYxOTY4MH0.YwfPeNlNE8ecF8jnkozfV9MY40YDoPo_t2GXyc5sy04';
+
+// Write key — NOT stored in HTML. Prompted once per session in dump tool.
+// Uses service_role JWT which bypasses RLS — only you have this.
+function getWriteKey() {
+  let key = sessionStorage.getItem('sb_write_key');
+  if (!key) {
+    key = window.prompt('Enter your Supabase write key to publish:');
+    if (!key) throw new Error('Write key required to publish.');
+    sessionStorage.setItem('sb_write_key', key.trim());
+  }
+  return key;
+}
+
+function writeHeaders() {
+  const key = getWriteKey();
+  return {
+    'apikey': key,
+    'Authorization': 'Bearer ' + key,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=minimal'
+  };
+}
+
+// In-memory cache of Supabase posts — loaded on page init
+let _sbPosts = [];
+let _sbLoaded = false;
+
+async function loadSupabasePosts() {
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/posts?select=*&order=created_at.desc', {
+      headers: { 'apikey': SB_ANON_KEY, 'Authorization': 'Bearer ' + SB_ANON_KEY }
+    });
+    if (!res.ok) throw new Error('Supabase fetch failed: ' + res.status);
+    const rows = await res.json();
+    _sbPosts = rows.map(r => typeof r.post_json === 'string' ? JSON.parse(r.post_json) : r.post_json);
+    _sbLoaded = true;
+  } catch(e) {
+    console.warn('Supabase load failed, using defaults only:', e.message);
+    _sbPosts = [];
+    _sbLoaded = true;
+  }
+}
+
+async function saveStoredPost(post) {
+  try {
+    const res = await fetch(SB_URL + '/rest/v1/posts', {
+      method: 'POST',
+      headers: writeHeaders(),
+      body: JSON.stringify({ post_json: post })
+    });
+    if (!res.ok) {
+      const err = await res.text();
+      throw new Error('Save failed: ' + err);
+    }
+    _sbPosts.unshift(post); // update cache immediately
+  } catch(e) {
+    console.error('Supabase save error:', e);
+    throw e; // re-throw so publishPost can show error
+  }
+}
+
+async function deleteStoredPost(id) {
+  // Find the post in cache to get its DB row — match by post_json->>'id'
+  try {
+    const res = await fetch(
+      SB_URL + `/rest/v1/posts?post_json->>id=eq.${id}`,
+      { method: 'DELETE', headers: writeHeaders() }
+    );
+    if (!res.ok) throw new Error('Delete failed: ' + res.status);
+    _sbPosts = _sbPosts.filter(p => p.id !== id); // update cache
+  } catch(e) {
+    console.error('Supabase delete error:', e);
+  }
+}
 
 function getStoredPosts() {
-  try { return JSON.parse(localStorage.getItem(LS_KEY) || '[]'); } catch { return []; }
+  return _sbPosts; // return cached Supabase posts
 }
-function saveStoredPost(post) {
-  const posts = getStoredPosts();
-  posts.unshift(post);
-  localStorage.setItem(LS_KEY, JSON.stringify(posts));
-}
-function deleteStoredPost(id) {
-  const posts = getStoredPosts().filter(p => p.id !== id);
-  localStorage.setItem(LS_KEY, JSON.stringify(posts));
-}
+
 function getAllPosts() {
-  const stored = getStoredPosts();
-  return [...stored, ...DEFAULT_POSTS];
+  return [..._sbPosts, ...DEFAULT_POSTS];
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1530,12 +1597,11 @@ function populatePreview(d) {
   document.getElementById('prev-tech').value = d.content?.tech_section || '';
 }
 
-function publishPost() {
+async function publishPost() {
   const imageInput = document.getElementById('dump-image');
   const imageFile = imageInput && imageInput.files[0];
-  let imageDataUrl = null;
 
-  const doPublish = (imgData) => {
+  const doPublish = async (imgData) => {
     const diagramSteps = (() => {
       try { return JSON.parse(document.getElementById('prev-diagram').value || '[]'); }
       catch { return []; }
@@ -1563,15 +1629,20 @@ function publishPost() {
         tech_section: document.getElementById('prev-tech').value
       }
     };
-    saveStoredPost(post);
-    renderBlog();
-    updateQuadCounts();
-    discardPreview();
-    document.getElementById('dump-input').value = '';
-    document.getElementById('dump-image').value = '';
-    document.getElementById('clear-img-btn').style.display = 'none';
-    setStatus('Published! Visible on the blog.', 'success');
-    renderDumpPostsList();
+    setStatus('Saving to database…', '');
+    try {
+      await saveStoredPost(post);
+      renderBlog();
+      updateQuadCounts();
+      discardPreview();
+      document.getElementById('dump-input').value = '';
+      document.getElementById('dump-image').value = '';
+      document.getElementById('clear-img-btn').style.display = 'none';
+      setStatus('Published! Live for all visitors now.', 'success');
+      renderDumpPostsList();
+    } catch(e) {
+      setStatus('Save failed: ' + e.message, 'error');
+    }
   };
 
   if (imageFile) {
@@ -1580,7 +1651,7 @@ function publishPost() {
     reader.onerror = () => doPublish(null);
     reader.readAsDataURL(imageFile);
   } else {
-    doPublish(null);
+    await doPublish(null);
   }
 }
 
@@ -1609,8 +1680,8 @@ function renderDumpPostsList() {
   `).join('');
 }
 
-function deleteDumpPost(id) {
-  deleteStoredPost(id);
+async function deleteDumpPost(id) {
+  await deleteStoredPost(id);
   renderBlog();
   renderDumpPostsList();
 }
@@ -1671,7 +1742,12 @@ document.addEventListener('keydown', e => {
 });
 
 // Initial blog render
-renderBlog();
+// Load Supabase posts first, then render blog
+loadSupabasePosts().then(() => {
+  renderBlog();
+  updateQuadCounts();
+  renderDumpPostsList();
+});
 
 // Custom flowchart renderer — takes JSON, returns HTML string
 // No external library. No parse errors. Full design control.

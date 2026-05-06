@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Prashant Singh — PM Portfolio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -716,6 +717,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       <input type="password" id="sb-write-key-input" placeholder="Enter Supabase write key to enable publishing"
         style="flex:1;min-width:200px;background:#0a0e1c;border:1px solid #1a2540;color:var(--text-1);padding:0.45rem 0.75rem;border-radius:5px;font-size:0.8rem;font-family:'Outfit',sans-serif;"
         oninput="sessionStorage.setItem('sb_write_key', this.value.trim())"/>
+      <button onclick="testSupabaseConnection()" style="background:#1a2540;border:1px solid #2e3d5e;color:var(--text-1);padding:0.45rem 0.9rem;border-radius:5px;font-size:0.78rem;font-family:'Outfit',sans-serif;cursor:pointer;white-space:nowrap;transition:border-color 0.15s;" onmouseover="this.style.borderColor='var(--amber)'" onmouseout="this.style.borderColor='#2e3d5e'">Test connection</button>
       <span style="font-size:0.68rem;color:var(--text-3);">Stored in session only — not saved to HTML</span>
     </div>
 
@@ -824,6 +826,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         <button class="dump-discard-btn" onclick="resetWriteKey()" style="font-size:0.72rem;opacity:0.6;" title="Click if publish is failing — clears stored key so you can re-enter it">Reset write key</button>
         <button class="dump-discard-btn" onclick="discardPreview()">Discard</button>
       </div>
+      <p class="dump-status" id="publish-status"></p>
     </div>
 
     <!-- Manage published posts -->
@@ -921,99 +924,73 @@ const DEFAULT_POSTS = [
 ];
 
 /* ════════════════════════════════════════════════════════════════════════
-   POSTS STORE: Supabase backend — posts visible to all visitors instantly
+   POSTS STORE: Supabase JS client — handles CORS correctly
    ════════════════════════════════════════════════════════════════════════ */
-const SB_URL = 'https://exsmklravnkoordfvsh.supabase.co';
-// Anon key — safe to be public, used for reads only
+const SB_URL  = 'https://exsmklravnkoordfvsh.supabase.co';
 const SB_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV4c21raWxyYXZua29vcmRmdnNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgwNDM2ODAsImV4cCI6MjA5MzYxOTY4MH0.YwfPeNlNE8ecF8jnkozfV9MY40YDoPo_t2GXyc5sy04';
 
-// Write key — NOT stored in HTML. Prompted once per session in dump tool.
-// Uses service_role JWT which bypasses RLS — only you have this.
-function getWriteKey() {
-  // Check the input field first (most current value)
+// Read client — uses anon key, always available
+const sbRead = supabase.createClient(SB_URL, SB_ANON_KEY);
+
+// Write client — uses service_role key entered by Prashant
+// Created on demand when key is available
+function getWriteClient() {
   const inputEl = document.getElementById('sb-write-key-input');
   if (inputEl && inputEl.value.trim()) {
     const key = inputEl.value.trim();
     sessionStorage.setItem('sb_write_key', key);
-    return key;
+    return supabase.createClient(SB_URL, key, { auth: { persistSession: false } });
   }
-  // Fall back to sessionStorage (if key entered in a previous call)
   const key = sessionStorage.getItem('sb_write_key');
   if (!key) throw new Error('Enter your Supabase write key in the field above before publishing.');
-  return key;
+  return supabase.createClient(SB_URL, key, { auth: { persistSession: false } });
 }
 
-function writeHeaders() {
-  const key = getWriteKey();
-  return {
-    'apikey': key,
-    'Authorization': 'Bearer ' + key,
-    'Content-Type': 'application/json',
-    'Prefer': 'return=minimal'
-  };
-}
-
-// In-memory cache of Supabase posts — loaded on page init
+// In-memory cache
 let _sbPosts = [];
-let _sbLoaded = false;
 
 async function loadSupabasePosts() {
   try {
-    const res = await fetch(SB_URL + '/rest/v1/posts?select=*&order=created_at.desc', {
-      headers: { 'apikey': SB_ANON_KEY, 'Authorization': 'Bearer ' + SB_ANON_KEY }
-    });
-    if (!res.ok) throw new Error('Supabase fetch failed: ' + res.status);
-    const rows = await res.json();
-    _sbPosts = rows.map(r => typeof r.post_json === 'string' ? JSON.parse(r.post_json) : r.post_json);
-    _sbLoaded = true;
+    const { data, error } = await sbRead
+      .from('posts')
+      .select('post_json, created_at')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    _sbPosts = (data || []).map(r =>
+      typeof r.post_json === 'string' ? JSON.parse(r.post_json) : r.post_json
+    );
   } catch(e) {
     console.warn('Supabase load failed, using defaults only:', e.message);
     _sbPosts = [];
-    _sbLoaded = true;
   }
 }
 
 async function saveStoredPost(post) {
-  let headers;
-  try {
-    headers = writeHeaders(); // may prompt for key
-  } catch(e) {
-    throw e; // user cancelled prompt
-  }
-  const res = await fetch(SB_URL + '/rest/v1/posts', {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify({ post_json: post })
-  });
-  if (!res.ok) {
-    const errText = await res.text();
-    // If 401/403, clear stored key so user can re-enter
-    if (res.status === 401 || res.status === 403) {
+  const client = getWriteClient(); // throws if no key
+  const { error } = await client
+    .from('posts')
+    .insert({ post_json: post });
+  if (error) {
+    if (error.code === '42501' || error.message.includes('permission') || error.message.includes('policy')) {
       sessionStorage.removeItem('sb_write_key');
-      throw new Error('Wrong write key — cleared. Click Publish again to re-enter.');
+      throw new Error('Write key rejected — cleared. Re-enter and try again.');
     }
-    throw new Error('Supabase error ' + res.status + ': ' + errText.substring(0, 150));
+    throw new Error(error.message);
   }
   _sbPosts.unshift(post);
 }
 
 async function deleteStoredPost(id) {
-  // Find the post in cache to get its DB row — match by post_json->>'id'
-  try {
-    const res = await fetch(
-      SB_URL + `/rest/v1/posts?post_json->>id=eq.${id}`,
-      { method: 'DELETE', headers: writeHeaders() }
-    );
-    if (!res.ok) throw new Error('Delete failed: ' + res.status);
-    _sbPosts = _sbPosts.filter(p => p.id !== id); // update cache
-  } catch(e) {
-    console.error('Supabase delete error:', e);
-  }
+  const client = getWriteClient();
+  const { error } = await client
+    .from('posts')
+    .delete()
+    .eq('post_json->>id', id);
+  if (error) throw new Error(error.message);
+  _sbPosts = _sbPosts.filter(p => p.id !== id);
 }
 
-function getStoredPosts() {
-  return _sbPosts; // return cached Supabase posts
-}
+function getStoredPosts() { return _sbPosts; }
 
 function getAllPosts() {
   return [..._sbPosts, ...DEFAULT_POSTS];
@@ -1649,7 +1626,7 @@ async function publishPost() {
         tech_section: document.getElementById('prev-tech').value
       }
     };
-    setStatus('Saving to database…', '');
+    setPublishStatus('Saving to database…', '');
     try {
       await saveStoredPost(post);
       renderBlog();
@@ -1658,10 +1635,10 @@ async function publishPost() {
       document.getElementById('dump-input').value = '';
       document.getElementById('dump-image').value = '';
       document.getElementById('clear-img-btn').style.display = 'none';
-      setStatus('Published! Live for all visitors now.', 'success');
+      setPublishStatus('Published! Live for all visitors now.', 'success');
       renderDumpPostsList();
     } catch(e) {
-      setStatus('Save failed: ' + e.message, 'error');
+      setPublishStatus('Save failed: ' + e.message, 'error');
     }
   };
 
@@ -1684,11 +1661,66 @@ function resetWriteKey() {
   sessionStorage.removeItem('sb_write_key');
   const inputEl = document.getElementById('sb-write-key-input');
   if (inputEl) inputEl.value = '';
-  setStatus('Write key cleared — enter it again in the field above.', '');
+  setPublishStatus('Write key cleared — enter it again in the field above.', '');
+}
+
+async function testSupabaseConnection() {
+  setPublishStatus('Testing connection…', '');
+  const results = [];
+
+  // ── TEST 1: Read (anon key) ──────────────────────────────────────────────
+  try {
+    const { data, error } = await sbRead.from('posts').select('created_at').limit(1);
+    if (error) throw error;
+    results.push('✅ Read: OK');
+  } catch(e) {
+    results.push('❌ Read failed: ' + e.message);
+    setPublishStatus(results.join(' · '), 'error');
+    return;
+  }
+
+  // ── TEST 2: Write key present ────────────────────────────────────────────
+  let writeClient;
+  try {
+    writeClient = getWriteClient();
+    results.push('✅ Write key: found');
+  } catch(e) {
+    results.push('❌ Write key: ' + e.message);
+    setPublishStatus(results.join(' · '), 'error');
+    return;
+  }
+
+  // ── TEST 3: Write (insert a test row then immediately delete it) ─────────
+  try {
+    const testPost = { id: 'test-' + Date.now(), title: '__connection_test__' };
+    const { error: insertErr } = await writeClient
+      .from('posts')
+      .insert({ post_json: testPost });
+    if (insertErr) throw insertErr;
+
+    // Clean up — delete the test row
+    await writeClient
+      .from('posts')
+      .delete()
+      .eq('post_json->>id', testPost.id);
+
+    results.push('✅ Write: OK');
+    setPublishStatus(results.join(' · ') + ' — ready to publish!', 'success');
+  } catch(e) {
+    results.push('❌ Write failed: ' + e.message);
+    setPublishStatus(results.join(' · '), 'error');
+  }
 }
 
 function setStatus(msg, type) {
   const el = document.getElementById('dump-status');
+  el.textContent = msg;
+  el.className = 'dump-status' + (type ? ' ' + type : '');
+}
+
+function setPublishStatus(msg, type) {
+  const el = document.getElementById('publish-status');
+  if (!el) return;
   el.textContent = msg;
   el.className = 'dump-status' + (type ? ' ' + type : '');
 }

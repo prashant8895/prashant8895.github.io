@@ -305,6 +305,9 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 .dump-preview-actions{display:flex;gap:0.75rem;margin-top:2rem;flex-wrap:wrap;}
 .dump-publish-btn{background:var(--amber);color:var(--bg);border:none;padding:0.78rem 1.75rem;border-radius:6px;font-weight:600;font-size:0.88rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:opacity 0.15s;}
 .dump-publish-btn:hover{opacity:0.88;}
+.cs-col-btn{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color 0.15s;padding:0;}
+.cs-col-btn:hover{border-color:#fff;}
+.cs-col-btn.active{border-color:#fff;outline:2px solid rgba(255,255,255,0.4);}
 .dump-discard-btn{background:none;border:1px solid #1a2540;color:var(--text-2);padding:0.78rem 1.25rem;border-radius:6px;font-size:0.88rem;cursor:pointer;font-family:'Outfit',sans-serif;transition:color 0.15s,border-color 0.15s;}
 .dump-discard-btn:hover{color:var(--text-1);border-color:#2e3d50;}
 .dump-status{font-size:0.82rem;color:var(--text-2);margin-top:0.75rem;min-height:1.2rem;}
@@ -527,67 +530,8 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
   <div class="wrap">
     <p class="sec-label">What I've shipped</p>
     <h2 class="sec-title">PM Case Studies</h2>
-    <div class="cs-grid">
-      <div class="cs-card" onclick="openCS('cbr')" onmouseenter="this.style.borderColor='rgba(232,160,32,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <div class="cs-top"><span class="cs-tag" style="background:rgba(232,160,32,0.1);color:#E8A020;">Ops · Automation</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
-        <h3 class="cs-title">CBR Automation</h3>
-        <p class="cs-prob">Refund TAT of 2–3 days — ~150 CX tickets every week and mounting compliance risk.</p>
-        <div class="cs-wins">
-          <div class="cs-win"><div class="win-dot" style="background:#E8A020;"></div>TAT: 2–3 days → Instant</div>
-          <div class="cs-win"><div class="win-dot" style="background:#E8A020;"></div>~150 CX tickets/week eliminated</div>
-          <div class="cs-win"><div class="win-dot" style="background:#E8A020;"></div>RBI-compliant self-serve</div>
-        </div>
-        <span class="cs-cta" style="color:#E8A020;">Read case study →</span>
-      </div>
-      <div class="cs-card" onclick="openCS('nlp')" onmouseenter="this.style.borderColor='rgba(96,165,250,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <div class="cs-top"><span class="cs-tag" style="background:rgba(96,165,250,0.1);color:#60A5FA;">AI · Retention</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
-        <h3 class="cs-title">AI-Powered Card Closure</h3>
-        <p class="cs-prob">Manual ops bottleneck — every closure request routed identically regardless of user intent.</p>
-        <div class="cs-wins">
-          <div class="cs-win"><div class="win-dot" style="background:#60A5FA;"></div>~40% reduction in manual ops</div>
-          <div class="cs-win"><div class="win-dot" style="background:#60A5FA;"></div>~200 agent-hours/month saved</div>
-          <div class="cs-win"><div class="win-dot" style="background:#60A5FA;"></div>+15% closure-avoidance rate</div>
-        </div>
-        <span class="cs-cta" style="color:#60A5FA;">Read case study →</span>
-      </div>
-      <div class="cs-card" onclick="openCS('rbi')" onmouseenter="this.style.borderColor='rgba(52,211,153,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <div class="cs-top"><span class="cs-tag" style="background:rgba(52,211,153,0.1);color:#34D399;">Compliance · Growth</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
-        <h3 class="cs-title">RBI Activation Uplift</h3>
-        <p class="cs-prob">Activation stuck at 92–93% — a critical bug hiding in J3 flows, at ~32K cards/month.</p>
-        <div class="cs-wins">
-          <div class="cs-win"><div class="win-dot" style="background:#34D399;"></div>Activation: 92–93% → 96–97%</div>
-          <div class="cs-win"><div class="win-dot" style="background:#34D399;"></div>~32K cards/month impacted</div>
-          <div class="cs-win"><div class="win-dot" style="background:#34D399;"></div>~1K reactivations in 2.5 months</div>
-        </div>
-        <span class="cs-cta" style="color:#34D399;">Read case study →</span>
-      </div>
-      <div class="cs-card" onclick="openCS('purplle')" onmouseenter="this.style.borderColor='rgba(251,146,60,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <div class="cs-top"><span class="cs-tag" style="background:rgba(251,146,60,0.1);color:#FB923C;">Growth · E-commerce</span><span class="cs-co">Purplle</span></div>
-        <h3 class="cs-title">Storefront Growth</h3>
-        <p class="cs-prob">Low AOV, high OOS rates, weak install conversion and painful sale-day downtime.</p>
-        <div class="cs-wins">
-          <div class="cs-win"><div class="win-dot" style="background:#FB923C;"></div>AOV up ~₹100, no conversion drop</div>
-          <div class="cs-win"><div class="win-dot" style="background:#FB923C;"></div>Install conversion: 4.5% → 6%</div>
-          <div class="cs-win"><div class="win-dot" style="background:#FB923C;"></div>Downtime: 6–7hrs → &lt;20 mins</div>
-        </div>
-        <span class="cs-cta" style="color:#FB923C;">Read case study →</span>
-      </div>
-      <div class="cs-card" onclick="openCS('npa')" onmouseenter="this.style.borderColor='rgba(167,139,250,0.35)'" onmouseleave="this.style.borderColor='var(--border)'">
-        <div class="cs-top"><span class="cs-tag" style="background:rgba(167,139,250,0.1);color:#A78BFA;">Fintech · Infrastructure</span><span class="cs-co">Zeta / HDFC Pixel</span></div>
-        <h3 class="cs-title">0→1 NPA Accounting</h3>
-        <p class="cs-prob">No accounting system for ₹29Cr NPA and ₹9Cr write-offs/month — blocking RBI rollout.</p>
-        <div class="cs-wins">
-          <div class="cs-win"><div class="win-dot" style="background:#A78BFA;"></div>₹29Cr NPA tracked end-to-end</div>
-          <div class="cs-win"><div class="win-dot" style="background:#A78BFA;"></div>₹9Cr write-offs/month automated</div>
-          <div class="cs-win"><div class="win-dot" style="background:#A78BFA;"></div>Phased RBI rollout unblocked</div>
-        </div>
-        <span class="cs-cta" style="color:#A78BFA;">Read case study →</span>
-      </div>
-      <div class="cs-locked">
-        <div style="font-size:1.75rem;margin-bottom:0.25rem;">🔒</div>
-        <p style="font-family:'Cormorant Garamond',serif;color:var(--text-3);font-size:1rem;font-style:italic;">AI PM Case Study</p>
-        <p style="color:var(--text-3);font-size:0.74rem;margin-top:0.2rem;">Coming soon</p>
-      </div>
+    <div class="cs-grid" id="cs-grid">
+      <p style="color:var(--text-3);font-size:0.85rem;font-style:italic;grid-column:1/-1;text-align:center;padding:2rem 0;" id="cs-loading">Loading case studies…</p>
     </div>
   </div>
 </section>
@@ -797,7 +741,69 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         <label>Takeaway (one punchy closing line — shown as highlighted quote)</label>
         <input type="text" id="prev-takeaway" class="dump-field-input"/>
       </div>
+      <!-- Dump type: Blog or Case Study -->
       <div class="dump-field">
+        <label>What are you creating? <span style="color:#f87171;font-size:0.7rem;">required</span></label>
+        <div style="display:flex;gap:0.6rem;margin-top:0.1rem;">
+          <button id="dump-type-blog" class="dump-cat-btn selected" onclick="selectDumpType('blog')">✍️ Blog Post</button>
+          <button id="dump-type-cs"   class="dump-cat-btn"          onclick="selectDumpType('cs')">📋 Case Study</button>
+        </div>
+      </div>
+
+      <!-- CS-only fields (hidden when blog mode) -->
+      <div id="cs-fields" style="display:none;">
+        <div class="dump-field">
+          <label>Company</label>
+          <input type="text" id="prev-cs-company" class="dump-field-input" placeholder="e.g. Zeta, Purplle, Urban Company"/>
+        </div>
+        <div class="dump-field">
+          <label>Tag <span style="color:var(--text-3);font-weight:400;">(domain · type)</span></label>
+          <input type="text" id="prev-cs-tag" class="dump-field-input" placeholder="e.g. AI · Fintech or Compliance · Growth"/>
+        </div>
+        <div class="dump-field">
+          <label>Accent colour</label>
+          <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.35rem;">
+            <button class="cs-col-btn" onclick="selectCSColor('#E8A020')" style="background:#E8A020;">&nbsp;&nbsp;&nbsp;</button>
+            <button class="cs-col-btn" onclick="selectCSColor('#60A5FA')" style="background:#60A5FA;">&nbsp;&nbsp;&nbsp;</button>
+            <button class="cs-col-btn" onclick="selectCSColor('#34D399')" style="background:#34D399;">&nbsp;&nbsp;&nbsp;</button>
+            <button class="cs-col-btn" onclick="selectCSColor('#FB923C')" style="background:#FB923C;">&nbsp;&nbsp;&nbsp;</button>
+            <button class="cs-col-btn" onclick="selectCSColor('#A78BFA')" style="background:#A78BFA;">&nbsp;&nbsp;&nbsp;</button>
+            <button class="cs-col-btn" onclick="selectCSColor('#F472B6')" style="background:#F472B6;">&nbsp;&nbsp;&nbsp;</button>
+          </div>
+          <input type="hidden" id="prev-cs-color" value="#E8A020"/>
+        </div>
+        <div class="dump-field">
+          <label>One-line problem <span style="color:var(--text-3);font-weight:400;">(shown on card)</span></label>
+          <input type="text" id="prev-cs-problem" class="dump-field-input" placeholder="What was broken or missing."/>
+        </div>
+        <div class="dump-field">
+          <label>3 wins / metrics <span style="color:var(--text-3);font-weight:400;">(one per line, shown on card)</span></label>
+          <textarea id="prev-cs-wins" class="dump-field-textarea" rows="3" placeholder="40% reduction in ops effort&#10;+15% closure-avoidance rate&#10;Shipped in 6 weeks"></textarea>
+        </div>
+        <div class="dump-field">
+          <label>Problem expanded <span style="color:var(--text-3);font-weight:400;">(2-3 sentences, shown in modal)</span></label>
+          <textarea id="prev-cs-problem-long" class="dump-field-textarea" rows="3"></textarea>
+        </div>
+        <div class="dump-field">
+          <label>Key insight</label>
+          <textarea id="prev-cs-insight" class="dump-field-textarea" rows="3"></textarea>
+        </div>
+        <div class="dump-field">
+          <label>What I built <span style="color:var(--text-3);font-weight:400;">(concrete, no fluff)</span></label>
+          <textarea id="prev-cs-built" class="dump-field-textarea" rows="3"></textarea>
+        </div>
+        <div class="dump-field">
+          <label>Narrative <span style="color:var(--text-3);font-weight:400;">(the full AI-written story)</span></label>
+          <textarea id="prev-cs-narrative" class="dump-field-textarea" rows="10"></textarea>
+        </div>
+        <div class="dump-field">
+          <label>Result <span style="color:var(--text-3);font-weight:400;">(metrics first, then broader impact)</span></label>
+          <textarea id="prev-cs-result" class="dump-field-textarea" rows="3"></textarea>
+        </div>
+      </div>
+
+      <!-- Blog only: category -->
+      <div id="blog-cat-field" class="dump-field">
         <label>Category <span style="color:#f87171;font-size:0.7rem;">required</span></label>
         <div style="display:flex;gap:0.6rem;margin-top:0.1rem;">
           <button id="cat-knowledge" class="dump-cat-btn selected" onclick="selectCategory('knowledge')">📚 Knowledge</button>
@@ -823,11 +829,17 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
       </div>
 
       <div class="dump-preview-actions">
-        <button class="dump-publish-btn" onclick="publishPost()">Publish to blog →</button>
+        <button class="dump-publish-btn" onclick="selectedDumpType==='cs' ? publishCS() : publishPost()">Publish →</button>
         <button class="dump-discard-btn" onclick="resetWriteKey()" style="font-size:0.72rem;opacity:0.6;" title="Click if publish is failing — clears stored key so you can re-enter it">Reset write key</button>
         <button class="dump-discard-btn" onclick="discardPreview()">Discard</button>
       </div>
       <p class="dump-status" id="publish-status"></p>
+    </div>
+
+    <!-- Manage published case studies -->
+    <div id="dump-cs-section" style="display:none;margin-top:2rem;border-top:1px solid #141e30;padding-top:1.5rem;">
+      <p class="dump-preview-label">Published case studies</p>
+      <div id="dump-cs-list"></div>
     </div>
 
     <!-- Manage published posts -->
@@ -1165,56 +1177,141 @@ function closeLightbox() {
 /* ════════════════════════════════════════════════════════════════════════
    CASE STUDY MODAL
    ════════════════════════════════════════════════════════════════════════ */
-const CS_DATA = {
-  cbr:{tag:'Ops · Automation',tc:'#E8A020',tb:'rgba(232,160,32,0.1)',bc:'rgba(232,160,32,0.25)',title:'CBR Automation',
-    s:[{l:'🎯 Problem',c:'#E8A020',t:"Credit Balance Refunds took 2–3 days, generating ~150 CX escalations per week with heavy manual intervention — a compliance and ops risk at scale."},
-       {l:'💡 Insight',c:'#E8A020',t:"Users expected refunds to feel like UPI — instant. The delay wasn't a technical constraint; it was an unreviewed architecture decision. The fix was a redesign, not a patch."},
-       {l:'🔧 What I Built',c:'#E8A020',t:"Automated end-to-end CBR flow with real-time CASA refunds via self-serve. RBI compliance built in from day one. Manual ops touchpoints removed entirely."},
-       {l:'📊 Result',c:'#E8A020',t:"TAT dropped to instant. ~150 CX tickets/week eliminated. The self-serve model became a template for subsequent ops automation on Pixel."}]},
-  nlp:{tag:'AI · Retention',tc:'#60A5FA',tb:'rgba(96,165,250,0.1)',bc:'rgba(96,165,250,0.25)',title:'AI-Powered Card Closure',
-    s:[{l:'🎯 Problem',c:'#60A5FA',t:"Every card closure request routed identically — burning agent time on users who needed reassurance, losing churning users without a real retention attempt."},
-       {l:'💡 Insight',c:'#60A5FA',t:"Intent matters more than stated action. 'Close my card' might mean 'I'm frustrated' or 'I'm done.' NLP could separate them before any human touched the request."},
-       {l:'🔧 What I Built',c:'#60A5FA',t:"NLP-based intent classification: high-intent closures routed to retention agents; low-intent auto-closed. Designed classification logic, worked with engineering on integration and fallbacks."},
-       {l:'📊 Result',c:'#60A5FA',t:"~40% reduction in manual ops. ~200 agent-hours/month saved. +15% closure-avoidance rate — agents spending time only where they could actually change outcomes."}]},
-  rbi:{tag:'Compliance · Growth',tc:'#34D399',tb:'rgba(52,211,153,0.1)',bc:'rgba(52,211,153,0.25)',title:'RBI Activation Uplift',
-    s:[{l:'🎯 Problem',c:'#34D399',t:"Card activation stuck at 92–93% — confusing J3 flows compounded by a critical bug blocking ~75% of affected cards. Compliance and revenue risk at ~32K cards/month."},
-       {l:'💡 Insight',c:'#34D399',t:"The bug was masking the flow problem. Fixing only the bug would improve numbers without improving experience. Both needed addressing — plus externalisation with OTP consent for dormancy."},
-       {l:'🔧 What I Built',c:'#34D399',t:"Redesigned J3 activation flows end-to-end, fixed the critical bug (75%→90%), added OTP-based PWA consent for externalisation, and built a reactivation flow for dormancy recovery."},
-       {l:'📊 Result',c:'#34D399',t:"Activation reached 96–97%. ~32K cards/month impacted. ~1K reactivations in 2.5 months. Avoidable closures prevented at scale."}]},
-  purplle:{tag:'Growth · E-commerce',tc:'#FB923C',tb:'rgba(251,146,60,0.1)',bc:'rgba(251,146,60,0.25)',title:'Storefront Growth at Purplle',
-    s:[{l:'🎯 Problem',c:'#FB923C',t:"Storefront leaking value everywhere — low AOV, high OOS frustration, first-install conversion under 5%, and sale-day downtime in hours."},
-       {l:'💡 Insight',c:'#FB923C',t:"Quick wins exist at every funnel stage if you experiment and read data honestly. The Locale.ai alert system was the highest-impact, lowest-effort lever — and the one no one had prioritised."},
-       {l:'🔧 What I Built',c:'#FB923C',t:"Cart upsell widget (A/B + multivariate), MPC switching for OOS reduction, first-install flow optimisation, Locale.ai trigger-based alerts, and a Looker storefront tracking dashboard."},
-       {l:'📊 Result',c:'#FB923C',t:"AOV up ~₹100, no conversion drop. OOS cut ~4%. Install conversion 4.5%→6%. Downtime cut from 6–7hrs to &lt;20 mins. Spot Award + growth recognition."}]},
-  npa:{tag:'Fintech · Infrastructure',tc:'#A78BFA',tb:'rgba(167,139,250,0.1)',bc:'rgba(167,139,250,0.25)',title:'0→1 NPA Accounting System',
-    s:[{l:'🎯 Problem',c:'#A78BFA',t:"HDFC Pixel had no system for NPA, Secondary NPA, or Charge-Off accounting — ₹29Cr NPA and ₹9Cr write-offs/month running untracked, blocking RBI phased rollout."},
-       {l:'💡 Insight',c:'#A78BFA',t:"MAD and TAD logic had to be codified before automation could happen. The product work was translating dense regulatory language into clear system logic — a translation problem as much as a product one."},
-       {l:'🔧 What I Built',c:'#A78BFA',t:"0→1 NPA → Secondary NPA → Charge-Off accounting across MAD and TAD logic. Redesigned billing-day selection with month-end fallbacks. Enabled phased rollout safely."},
-       {l:'📊 Result',c:'#A78BFA',t:"₹29Cr NPA and ₹9Cr write-offs/month fully tracked and automated. RBI compliance unblocked. Phased rollout enabled. Shining Star and Outstanding Performer awards."}]}
-};
+/* ════════════════════════════════════════════════════════════════════════
+   CASE STUDIES — Supabase-driven, same pattern as blog posts
+   ════════════════════════════════════════════════════════════════════════ */
+let _sbCS = [];
 
-function openCS(key) {
-  const c = CS_DATA[key];
-  const tag = document.getElementById('cs-tag');
-  tag.textContent = c.tag; tag.style.background = c.tb; tag.style.color = c.tc;
-  document.getElementById('cs-box').style.borderColor = c.bc;
-  document.getElementById('cs-title').textContent = c.title;
-  document.getElementById('cs-body').innerHTML = c.s.map(s =>
-    `<div class="m-block"><p class="m-label" style="color:${s.c}">${s.l}</p><p class="m-text">${s.t}</p></div>`
+async function loadSupabaseCS() {
+  try {
+    const { data, error } = await sbRead
+      .from('case_studies')
+      .select('cs_json, created_at')
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    _sbCS = (data || []).map(r =>
+      typeof r.cs_json === 'string' ? JSON.parse(r.cs_json) : r.cs_json
+    );
+  } catch(e) {
+    console.warn('CS load failed:', e.message);
+    _sbCS = [];
+  }
+}
+
+async function saveCS(cs) {
+  const client = getWriteClient();
+  const { error } = await client.from('case_studies').insert({ cs_json: cs });
+  if (error) {
+    if (error.code === '42501' || error.message.includes('permission') || error.message.includes('Forbidden')) {
+      sessionStorage.removeItem('sb_write_key');
+      throw new Error('Write key rejected — cleared. Re-enter and try again.');
+    }
+    throw new Error(error.message);
+  }
+  _sbCS.unshift(cs);
+}
+
+async function deleteCS(id) {
+  const client = getWriteClient();
+  const { error } = await client.from('case_studies').delete().eq('cs_json->>id', id);
+  if (error) throw new Error(error.message);
+  _sbCS = _sbCS.filter(cs => cs.id !== id);
+}
+
+const ACCENT_COLORS = ['#E8A020','#60A5FA','#34D399','#FB923C','#A78BFA','#F472B6','#38BDF8'];
+
+function renderCS() {
+  const grid = document.getElementById('cs-grid');
+  if (!grid) return;
+  if (!_sbCS.length) {
+    grid.innerHTML = '<p style="color:var(--text-3);font-size:0.85rem;font-style:italic;grid-column:1/-1;text-align:center;padding:2rem 0;">No case studies yet — add one via the dump tool at <a href="#dump" style="color:var(--amber)">/#dump</a></p>';
+    return;
+  }
+  grid.innerHTML = _sbCS.map((cs, i) => {
+    const acc = cs.color || ACCENT_COLORS[i % ACCENT_COLORS.length];
+    const wins = (cs.wins || []).map(w =>
+      `<div class="cs-win"><div class="win-dot" style="background:${acc};"></div>${w}</div>`
+    ).join('');
+    return `
+      <div class="cs-card"
+           onclick="openCS('${cs.id}')"
+           onmouseenter="this.style.borderColor='${acc}44'"
+           onmouseleave="this.style.borderColor='var(--border)'">
+        <div class="cs-top">
+          <span class="cs-tag" style="background:${acc}18;color:${acc};">${cs.tag || ''}</span>
+          <span class="cs-co">${cs.company || ''}</span>
+        </div>
+        <h3 class="cs-title">${cs.title}</h3>
+        <p class="cs-prob">${cs.problem || ''}</p>
+        <div class="cs-wins">${wins}</div>
+        <span class="cs-cta" style="color:${acc};">Read case study →</span>
+      </div>`;
+  }).join('');
+  updateQuadCounts();
+}
+
+function openCS(id) {
+  const cs = _sbCS.find(x => x.id === id);
+  if (!cs) return;
+  const acc = cs.color || '#E8A020';
+  const modal = document.getElementById('cs-modal');
+  const tag   = document.getElementById('cs-tag');
+  tag.textContent = cs.tag || ''; tag.style.background = acc+'18'; tag.style.color = acc;
+  document.getElementById('cs-box').style.borderColor = acc+'44';
+  document.getElementById('cs-title').textContent = cs.title;
+  // Build narrative sections
+  const sections = [
+    { l: '🎯 Problem',      t: cs.problem_long  || cs.problem || '' },
+    { l: '💡 Insight',      t: cs.insight       || '' },
+    { l: '🔧 What I Built', t: cs.what_i_built  || '' },
+    { l: '📖 The Story',    t: cs.narrative      || '' },
+    { l: '📊 Result',       t: cs.result        || '' },
+  ].filter(s => s.t);
+  document.getElementById('cs-body').innerHTML = sections.map(s =>
+    `<div class="m-block"><p class="m-label" style="color:${acc}">${s.l}</p><p class="m-text">${s.t}</p></div>`
   ).join('');
-  document.getElementById('cs-modal').classList.add('open');
+  modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+
 function closeCS() { document.getElementById('cs-modal').classList.remove('open'); document.body.style.overflow = ''; }
+
 
 /* ════════════════════════════════════════════════════════════════════════
    /DUMP TOOL
    ════════════════════════════════════════════════════════════════════════ */
 let selectedTag = 'Project Retrospective';
 let selectedCategory = 'knowledge';
+let selectedDumpType = 'blog'; // 'blog' or 'cs'
 let currentDraft = null;
 let selectedProvider = 'gemini';
 let selectedModel = 'gemini-2.5-flash';
+
+function selectCSColor(hex) {
+  document.getElementById('prev-cs-color').value = hex;
+  document.querySelectorAll('.cs-col-btn').forEach(function(b){
+    b.classList.toggle('active', b.style.background === hex);
+  });
+}
+
+function selectDumpType(type) {
+  selectedDumpType = type;
+  document.getElementById('dump-type-blog').classList.toggle('selected', type === 'blog');
+  document.getElementById('dump-type-cs').classList.toggle('selected', type === 'cs');
+  // Show/hide relevant fields
+  const csFields = document.getElementById('cs-fields');
+  const blogCat  = document.getElementById('blog-cat-field');
+  if(csFields)  csFields.style.display  = type==='cs'   ? 'block' : 'none';
+  if(blogCat)   blogCat.style.display   = type==='blog' ? 'block' : 'none';
+  // Hide blog-only fields when CS
+  ['prev-tags','prev-img-caption','prev-diagram','prev-tech'].forEach(function(id){
+    const el = document.getElementById(id);
+    if(el) el.closest('.dump-field').style.display = type==='cs' ? 'none' : 'block';
+  });
+  // Show/hide tag row
+  const tagRow = document.getElementById('dump-tag-row');
+  if (tagRow) tagRow.style.display = type === 'blog' ? '' : 'none';
+}
 
 // ── PROVIDER / MODEL CONFIG ─────────────────────────────────────────────────
 const PROVIDERS = {
@@ -1500,40 +1597,95 @@ async function processDump() {
   }
 
   // ── Build prompts ────────────────────────────────────────────────────────
-  const textPrompt = `You are a world-class storyteller writing as Prashant Singh — a Product Manager at Zeta (HDFC Pixel credit card), previously at Purplle and Urban Company. Engineering background. Direct, specific, honest, wry. Not corporate.
 
-BEFORE WRITING — diagnose the soul of this story. Choose ONE tone: sharp & punchy / dry & witty / raw & unfiltered / warm & intimate / lyrical & slow. Choose ONE structure: could start at the end, orbit a central image, be one long zoomed-in moment. Commit fully.
+  // ── CASE STUDY PATH ─────────────────────────────────────────────────────
+  if (selectedDumpType === 'cs') {
+    const csPrompt = `You are a ghostwriter for a Senior Product Manager with multiple years across fintech, e-commerce, B2C services, logistics and tech. He writes for PMs, builders, and founders — people who think in systems but feel in stories.
 
-WRITING RULES:
-- Open with impact — first line must be impossible to stop after
-- Every sentence moves the story forward, deepens emotion, or reveals something new
-- Name real things: Pixel card, CBR automation, NLP intent classification, RBI compliance, Purplle storefront. Use real numbers.
-- Each paragraph (situation, turn, lesson) = 120-200 words minimum. Full paragraphs, not summaries.
-- Close with resonance — final line = a door closing, not a summary
+His voice is:
+- Conversational but never casual to the point of losing depth
+- Direct. No throat-clearing. No "In today's fast-paced world..."
+- He uses "I" and lived experience, but the insight is always transferable
+- He makes the reader feel like they're hearing this over coffee, not reading a LinkedIn post
+- He doesn't hedge. He has a point of view.
 
-BANNED: "Have you ever wondered" / "Demystifying" / "Game-changer" / "Paradigm shift" / "Move the needle" / "Learnings" / rhetorical question openers / "In conclusion" / "Key takeaways"
-JSON FORMAT RULES: Use ONLY double quotes for all strings. NEVER use backticks. NEVER use single quotes as string delimiters. All JSON values must be valid JSON strings.
-
-TITLE RULE: Must be a first-person narrative statement — a sentence about what happened.
-GOOD: "I built a blog that almost writes itself" / "The metric we tracked wrong for three months"
-BAD: "Zero Friction Writing" / "Product Lessons" / any topic label
-
-SOURCE TYPE: This is a "${selectedTag}" piece.${imageFile ? '\nIMAGE: A diagram is attached. Let its structure inform the narrative.' : ''}
+YOUR JOB: Take the raw notes and turn them into a PM case study.
 
 Return ONLY valid JSON — no fences, no preamble:
 {
-  "title": "first-person narrative title",
-  "teaser": "2 sentences. First: situation bluntly. Second: why worth writing.",
-  "tags": ["Tag1", "Tag2"],
+  "title": "Short punchy case study title (not a topic label — what actually happened)",
+  "company": "Company name",
+  "tag": "Domain · Type (e.g. AI · Retention or Compliance · Growth)",
+  "color": "Pick one hex: #E8A020 or #60A5FA or #34D399 or #FB923C or #A78BFA or #F472B6",
+  "problem": "One crisp sentence — what was broken or missing.",
+  "wins": ["Metric or outcome 1", "Metric or outcome 2", "Metric or outcome 3"],
+  "problem_long": "2-3 sentences expanding on the problem with real context and stakes.",
+  "insight": "The non-obvious realisation that made everything else possible. Sharp, specific, transferable.",
+  "what_i_built": "What was actually shipped. Concrete. No fluff.",
+  "narrative": "The story of how this happened. Follow this structure: HOOK (2-3 lines — drop into a moment or tension, no context yet), THE SETUP (situation grounded in reality), THE PROBLEM/TENSION (what was broken or counterintuitive), THE UNFOLDING (what happened — use specifics, numbers, small details), THE TURN (moment things clicked or changed), THE LESSON (one sharp transferable insight — not a list), CLOSE (question, provocation, or quiet mic drop). Rules: no bullet points in narrative body, prose only, no jargon unless explained, max 600-800 words, every paragraph earns the next, do not start with 'I', do not use game-changer/learnings/double-click/unpack.",
+  "result": "The outcomes. Metrics first, then broader impact."
+}
+
+RAW NOTES:
+${raw}`;
+
+    setStatus('Processing case study…', '');
+    try {
+      const textMessages = [{ role: 'user', content: csPrompt }];
+      const rawResp = await callAI(csPrompt, null, null);
+      const parsed = safeParseJSON(rawResp);
+      currentDraft = { ...parsed, _type: 'cs' };
+      populateCSPreview(parsed);
+      document.getElementById('dump-preview').classList.add('show');
+      setStatus('Done ✓ — review and publish when ready', 'success');
+    } catch(err) {
+      setStatus('Error: ' + (err.message || 'Something went wrong.'), 'error');
+    } finally {
+      btn.disabled = false; btnText.textContent = 'Process with AI'; spinner.style.display = 'none';
+    }
+    return; // don't run blog path
+  }
+
+  const textPrompt = `You are a ghostwriter for a Senior Product Manager with multiple years in domains like fintech, e-commerce, B2C services, logistics, and tech.
+He writes for PMs, builders, and founders — people who think in systems but feel in stories.
+His voice is:
+- Conversational but never casual to the point of losing depth
+- Direct. No throat-clearing. No "In today's fast-paced world..."
+- He uses "I" and lived experience, but the insight is always transferable
+- He makes the reader feel like they're hearing this over coffee, not reading a LinkedIn post
+- He doesn't hedge. He has a point of view.
+
+YOUR JOB:
+Take the raw notes below and turn them into a narrative blog post.
+
+Structure:
+1. HOOK (2-3 lines max) — drop the reader into a moment, a tension, or a surprising claim. No context yet. Make them need to read the next line.
+2. THE SETUP — what was the situation? Ground it in reality. Keep it tight.
+3. THE PROBLEM / TENSION — what was broken, confusing, or counterintuitive? This is where the reader goes "oh I've felt this too."
+4. THE UNFOLDING — what happened? Walk through it like a story, not a report. Use specifics. Numbers, conversations, small details make it real.
+5. THE TURN — the moment things clicked, broke, or changed. Every good story has one.
+6. THE LESSON / TAKEAWAY — one sharp, transferable insight. Not a list. One thing, said well.
+7. CLOSE — end with a question, a provocation, or a quiet mic drop. Something that lingers.
+
+Rules:
+- No bullet points in the post body. Prose only.
+- No jargon unless it's explained or the audience clearly knows it
+- Max 600-800 words unless the story demands more
+- Every paragraph should earn the next one. If it doesn't pull the reader forward, cut it.
+- Do not start with "I" as the very first word
+- Do not use the phrase "game-changer", "learnings", "double-click", or "unpack"
+- Output ONLY a JSON object. No markdown fences, no preamble.
+
+{
+  "title": "Short punchy title — what actually happened, not a topic label",
+  "teaser": "2 crisp sentences for the blog card. Make them want to click.",
   "readTime": "X min read",
-  "image_caption": "${imageFile ? 'one sentence describing what the original image shows' : ''}",
   "content": {
-    "hook": "2-3 sentences. Drop into a scene or counter-intuitive fact. No warm-up.",
-    "situation": "FULL PARAGRAPH 120-200 words. Context and setup. Name the product, metric, timeframe.",
-    "turn": "FULL PARAGRAPH 120-200 words. The pivot or realisation. One concrete beat.",
-    "lesson": "FULL PARAGRAPH 100-180 words. What came after — a scene or consequence, not stated wisdom.",
-    "takeaway": "One sentence. A door closing.",
-    "tech_section": "OPTIONAL. Only include if post has a genuine technical breakdown. Use plain HTML with double-quoted attributes only — no backticks, no template literals. Allowed class names: bp-section-title, bp-tech-box, bp-step, bp-step-num, bp-step-text, bp-table. Set to empty string if not needed."
+    "hook": "The opening 2-3 lines. Drop into a moment. No context yet.",
+    "situation": "The setup. What was the context? Keep it tight.",
+    "turn": "The unfolding + the turn. What happened, then the click moment.",
+    "lesson": "The lesson. One sharp insight. Prose, not a list.",
+    "takeaway": "One punchy closing line that lingers."
   }
 }
 
@@ -1593,6 +1745,56 @@ function populatePreview(d) {
   document.getElementById('prev-diagram').value = (d.diagram_steps && d.diagram_steps.length)
     ? JSON.stringify(d.diagram_steps, null, 2) : '';
   document.getElementById('prev-tech').value = d.content?.tech_section || '';
+}
+
+
+function populateCSPreview(d) {
+  document.getElementById('prev-title').value          = d.title || '';
+  document.getElementById('prev-cs-company').value     = d.company || '';
+  document.getElementById('prev-cs-tag').value         = d.tag || '';
+  document.getElementById('prev-cs-color').value       = d.color || '#E8A020';
+  document.getElementById('prev-cs-problem').value     = d.problem || '';
+  document.getElementById('prev-cs-wins').value        = (d.wins || []).join('\n');
+  document.getElementById('prev-cs-problem-long').value= d.problem_long || '';
+  document.getElementById('prev-cs-insight').value     = d.insight || '';
+  document.getElementById('prev-cs-built').value       = d.what_i_built || '';
+  document.getElementById('prev-cs-narrative').value   = d.narrative || '';
+  document.getElementById('prev-cs-result').value      = d.result || '';
+  // Highlight selected colour button
+  selectCSColor(d.color || '#E8A020');
+  // Ensure CS fields visible
+  selectDumpType('cs');
+}
+
+
+async function publishCS() {
+  const cs = {
+    id: 'cs-' + Date.now(),
+    title:        document.getElementById('prev-title').value,
+    company:      document.getElementById('prev-cs-company').value,
+    tag:          document.getElementById('prev-cs-tag').value,
+    color:        document.getElementById('prev-cs-color').value || '#E8A020',
+    problem:      document.getElementById('prev-cs-problem').value,
+    wins:         document.getElementById('prev-cs-wins').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    problem_long: document.getElementById('prev-cs-problem-long').value,
+    insight:      document.getElementById('prev-cs-insight').value,
+    what_i_built: document.getElementById('prev-cs-built').value,
+    narrative:    document.getElementById('prev-cs-narrative').value,
+    result:       document.getElementById('prev-cs-result').value,
+    date:         new Date().toISOString().split('T')[0],
+  };
+  setPublishStatus('Saving case study…', '');
+  try {
+    await saveCS(cs);
+    renderCS();
+    updateQuadCounts();
+    discardPreview();
+    document.getElementById('dump-input').value = '';
+    setPublishStatus('Case study published! Live for all visitors.', 'success');
+    renderDumpCSList();
+  } catch(e) {
+    setPublishStatus('Save failed: ' + e.message, 'error');
+  }
 }
 
 async function publishPost() {
@@ -1761,6 +1963,26 @@ async function deleteDumpPost(id) {
   renderDumpPostsList();
 }
 
+function renderDumpCSList() {
+  const section = document.getElementById('dump-cs-section');
+  const list    = document.getElementById('dump-cs-list');
+  if (!section || !list) return;
+  if (!_sbCS.length) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  list.innerHTML = _sbCS.map(cs => `
+    <div class="dump-post-row">
+      <span class="dump-post-title-sm">${cs.title} <span style="opacity:0.5;font-size:0.7rem;">${cs.company || ''}</span></span>
+      <button class="dump-delete-btn" onclick="deleteDumpCS('${cs.id}')">Delete</button>
+    </div>
+  `).join('');
+}
+
+async function deleteDumpCS(id) {
+  await deleteCS(id);
+  renderCS();
+  renderDumpCSList();
+}
+
 /* ════════════════════════════════════════════════════════════════════════
    HASH ROUTING: #dump shows the tool, everything else shows portfolio
    ════════════════════════════════════════════════════════════════════════ */
@@ -1818,8 +2040,9 @@ document.addEventListener('keydown', e => {
 
 // Initial blog render
 // Load Supabase posts first, then render blog
-loadSupabasePosts().then(() => {
+Promise.all([loadSupabasePosts(), loadSupabaseCS()]).then(() => {
   renderBlog();
+  renderCS();
   updateQuadCounts();
   renderDumpPostsList();
 });

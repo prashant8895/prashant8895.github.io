@@ -812,6 +812,7 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
 
       <div class="dump-preview-actions">
         <button class="dump-publish-btn" onclick="publishPost()">Publish to blog →</button>
+        <button class="dump-discard-btn" onclick="resetWriteKey()" style="font-size:0.72rem;opacity:0.6;" title="Click if publish is failing — clears stored key so you can re-enter it">Reset write key</button>
         <button class="dump-discard-btn" onclick="discardPreview()">Discard</button>
       </div>
     </div>
@@ -960,21 +961,27 @@ async function loadSupabasePosts() {
 }
 
 async function saveStoredPost(post) {
+  let headers;
   try {
-    const res = await fetch(SB_URL + '/rest/v1/posts', {
-      method: 'POST',
-      headers: writeHeaders(),
-      body: JSON.stringify({ post_json: post })
-    });
-    if (!res.ok) {
-      const err = await res.text();
-      throw new Error('Save failed: ' + err);
-    }
-    _sbPosts.unshift(post); // update cache immediately
+    headers = writeHeaders(); // may prompt for key
   } catch(e) {
-    console.error('Supabase save error:', e);
-    throw e; // re-throw so publishPost can show error
+    throw e; // user cancelled prompt
   }
+  const res = await fetch(SB_URL + '/rest/v1/posts', {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify({ post_json: post })
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    // If 401/403, clear stored key so user can re-enter
+    if (res.status === 401 || res.status === 403) {
+      sessionStorage.removeItem('sb_write_key');
+      throw new Error('Wrong write key — cleared. Click Publish again to re-enter.');
+    }
+    throw new Error('Supabase error ' + res.status + ': ' + errText.substring(0, 150));
+  }
+  _sbPosts.unshift(post);
 }
 
 async function deleteStoredPost(id) {
@@ -1658,6 +1665,11 @@ async function publishPost() {
 function discardPreview() {
   document.getElementById('dump-preview').classList.remove('show');
   currentDraft = null;
+}
+
+function resetWriteKey() {
+  sessionStorage.removeItem('sb_write_key');
+  setStatus('Write key cleared — will prompt again on next publish.', '');
 }
 
 function setStatus(msg, type) {

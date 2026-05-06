@@ -118,7 +118,7 @@ body{cursor:none;}
 .m-title{font-family:'Cormorant Garamond',serif;font-size:1.9rem;font-weight:600;color:var(--text-1);margin-bottom:2rem;line-height:1.15;}
 .m-block{margin-bottom:1.35rem;}
 .m-label{font-size:0.68rem;font-weight:600;text-transform:uppercase;letter-spacing:0.14em;margin-bottom:0.38rem;}
-.m-text{font-size:0.92rem;color:var(--text-1);opacity:0.82;line-height:1.75;}
+.m-text{font-size:0.92rem;color:var(--text-1);opacity:0.82;line-height:1.75;white-space:pre-wrap;}
 
 /* Blog post modal */
 .bp-label{font-size:0.7rem;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--text-3);margin-bottom:0.5rem;}
@@ -692,9 +692,9 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
     <label class="dump-label">Your raw notes</label>
     <textarea id="dump-input" class="dump-textarea" placeholder="Paste anything here — a half-written thought, a post-meeting reflection, a rough outline, a voice transcript. No need to clean it up first."></textarea>
 
-    <label class="dump-label" style="margin-bottom:0.5rem;">Attach a diagram or image <span style="color:var(--text-3);font-weight:400;">(optional — flowcharts, screenshots, sketches)</span></label>
+    <label class="dump-label" style="margin-bottom:0.5rem;">Attach images <span style="color:var(--text-3);font-weight:400;">(optional — select multiple: diagrams, screenshots, sketches. AI reads all of them.)</span></label>
     <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:1.75rem;">
-      <input type="file" id="dump-image" accept="image/*" style="font-size:0.8rem;color:var(--text-2);background:#0a0e1c;border:1px solid #1a2540;border-radius:6px;padding:0.5rem 0.75rem;cursor:pointer;flex:1;outline:none;font-family:'Outfit',sans-serif;"/>
+      <input type="file" id="dump-image" accept="image/*" multiple style="font-size:0.8rem;color:var(--text-2);background:#0a0e1c;border:1px solid #1a2540;border-radius:6px;padding:0.5rem 0.75rem;cursor:pointer;flex:1;outline:none;font-family:'Outfit',sans-serif;"/>
       <button id="clear-img-btn" onclick="document.getElementById('dump-image').value='';this.style.display='none';" style="display:none;background:none;border:1px solid #1a2540;color:var(--text-3);padding:0.4rem 0.75rem;border-radius:5px;font-size:0.74rem;cursor:pointer;font-family:'Outfit',sans-serif;white-space:nowrap;">Clear</button>
     </div>
     <p style="font-size:0.72rem;color:var(--text-3);margin-top:-1.25rem;margin-bottom:1.75rem;">When an image is attached, the AI reads it and incorporates what it shows — including a recreated diagram.</p>
@@ -818,9 +818,9 @@ footer{padding:2.5rem 2rem;border-top:1px solid var(--border);text-align:center;
         <label>Tags (comma-separated)</label>
         <input type="text" id="prev-tags" class="dump-field-input" placeholder="e.g. AI PM, Fintech, Career"/>
       </div>
-      <div class="dump-field">
-        <label>Image caption <span style="color:var(--text-3);font-weight:400;">(shown under original image in post)</span></label>
-        <input type="text" id="prev-img-caption" class="dump-field-input" placeholder="e.g. My original sketch of the flow"/>
+      <div class="dump-field" id="prev-img-captions-wrap" style="display:none;">
+        <label>Image captions <span style="color:var(--text-3);font-weight:400;">(label each image — shown in the post)</span></label>
+        <div id="prev-img-captions"></div>
       </div>
       <div class="dump-field">
         <label>Recreated diagram <span style="color:var(--text-3);font-weight:400;">(AI-generated SVG — edit or clear if not needed)</span></label>
@@ -1090,13 +1090,21 @@ async function openBP(id) {
   if (!post || post.membersOnly) return;
   const c = post.content;
 
-  const imageHtml = post.image_data ? `
+  // Support both old single image_data and new array format
+  const imgDataArr = Array.isArray(post.image_data)
+    ? post.image_data
+    : (post.image_data ? [post.image_data] : []);
+  const captionsArr = Array.isArray(post.image_captions)
+    ? post.image_captions
+    : (post.image_caption ? [post.image_caption] : []);
+
+  const imageHtml = imgDataArr.map((src, i) => `
     <div class="bp-image-block">
-      <div class="bp-image-wrap" onclick="openLightbox('${post.id}')">
-        <img src="${post.image_data}" alt="Original diagram from notes"/>
+      <div class="bp-image-wrap" onclick="openLightboxSrc('${post.id}-${i}', this.querySelector('img').src)">
+        <img src="${src}" alt="Image ${i+1}"/>
       </div>
-      <p class="bp-image-caption">${post.image_caption || c.image_caption || 'Original diagram — click to zoom'}</p>
-    </div>` : '';
+      <p class="bp-image-caption">${captionsArr[i] || 'Click to zoom'}</p>
+    </div>`).join('');
 
   // Helper: find diagram steps — checks top-level AND content (backward compat for old posts)
   function getDiagramSteps(post) {
@@ -1164,6 +1172,12 @@ async function openBP(id) {
 function closeBP() {
   document.getElementById('bp-modal').classList.remove('open');
   document.body.style.overflow = '';
+}
+
+function openLightboxSrc(key, src) {
+  document._lightboxImages = document._lightboxImages || {};
+  document._lightboxImages[key] = src;
+  openLightbox(key);
 }
 
 function openLightbox(postId) {
@@ -1331,11 +1345,41 @@ function openCS(id) {
     { l: '📖 The Story',    t: cs.narrative      || '' },
     { l: '📊 Result',       t: cs.result        || '' },
   ].filter(s => s.t);
+
+  // Diagram
+  const csDiagSteps = Array.isArray(cs.diagram_steps) ? cs.diagram_steps : [];
+  const diagHtml = csDiagSteps.length ? `
+    <div class="bp-diagram-block" style="margin:1.5rem 0;">
+      <p class="bp-diagram-label">${cs.diagram_title || 'Solution Flow'}</p>
+      <div class="bp-diagram-inner" id="cs-diagram-render-${cs.id}"></div>
+    </div>` : '';
+
+  // Render uploaded images
+  const csImgs = Array.isArray(cs.image_data) ? cs.image_data : (cs.image_data ? [cs.image_data] : []);
+  const csCaps = Array.isArray(cs.image_captions) ? cs.image_captions : (cs.image_caption ? [cs.image_caption] : []);
+  const csImgHtml = csImgs.map((src, i) => `
+    <div class="bp-image-block">
+      <div class="bp-image-wrap" onclick="openLightboxSrc('cs-img-${cs.id}-${i}', this.querySelector('img').src)">
+        <img src="${src}" alt="Image ${i+1}" style="max-width:100%;border-radius:6px;"/>
+      </div>
+      <p class="bp-image-caption">${csCaps[i] || 'Click to zoom'}</p>
+    </div>`).join('');
+
   document.getElementById('cs-body').innerHTML = sections.map(s =>
     `<div class="m-block"><p class="m-label" style="color:${acc}">${s.l}</p><p class="m-text">${s.t}</p></div>`
-  ).join('');
+  ).join('') + csImgHtml + diagHtml;
+
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  // Render CS flowchart
+  if (csDiagSteps.length) {
+    const container = document.getElementById('cs-diagram-render-' + cs.id);
+    if (container && typeof renderFlowchart === 'function') {
+      try { container.innerHTML = renderFlowchart({ title: cs.diagram_title || 'Solution Flow', steps: csDiagSteps }); }
+      catch(e) { console.warn('CS diagram render failed:', e.message); }
+    }
+  }
 }
 
 function closeCS() { document.getElementById('cs-modal').classList.remove('open'); document.body.style.overflow = ''; }
@@ -1547,7 +1591,10 @@ async function processDump() {
   }
 
   const imageInput = document.getElementById('dump-image');
-  const imageFile = imageInput && imageInput.files[0];
+  const imageFiles = imageInput && imageInput.files.length > 0
+    ? Array.from(imageInput.files)
+    : [];
+  const imageFile = imageFiles[0] || null; // backward compat for single-image references
 
   // ── Helper: image → base64 ────────────────────────────────────────────────
   async function toBase64(file) {
@@ -1612,20 +1659,34 @@ async function processDump() {
   }
 
   // ── Unified call dispatcher ──────────────────────────────────────────────
-  async function callAI(textPrompt, diagPrompt, imageFile) {
-    const b64 = imageFile ? await toBase64(imageFile) : null;
+  async function callAI(textPrompt, diagPrompt, imageFiles) {
+    // imageFiles: File | File[] | null
+    const files = imageFiles
+      ? (Array.isArray(imageFiles) ? imageFiles : [imageFiles])
+      : [];
+
+    // Convert all files to base64
+    const images = await Promise.all(files.map(async f => ({
+      type: f.type,
+      b64: await toBase64(f)
+    })));
+
+    const hasImages = images.length > 0;
 
     if (selectedProvider === 'gemini') {
-      const textParts = b64
-        ? [{ inline_data: { mime_type: imageFile.type, data: b64 } }, { text: textPrompt }]
+      // Send all images + prompt in one call
+      const imgParts = images.map(img => ({ inline_data: { mime_type: img.type, data: img.b64 } }));
+      const textParts = hasImages
+        ? [...imgParts, { text: textPrompt }]
         : [{ text: textPrompt }];
       const textRaw = await callGemini(textParts, selectedModel, 6000);
       const parsed = safeParseJSON(textRaw);
 
+      // Diagram: use first image if diagPrompt provided, else rely on parsed.diagram_steps
       let diagramTitle = '', diagramSteps = [];
-      if (b64 && diagPrompt) {
+      if (hasImages && diagPrompt) {
         try {
-          const dParts = [{ inline_data: { mime_type: imageFile.type, data: b64 } }, { text: diagPrompt }];
+          const dParts = [...imgParts, { text: diagPrompt }];
           const dRaw = await callGemini(dParts, selectedModel, 6000);
           const dp = safeParseJSON(dRaw);
           diagramTitle = dp.title || ''; diagramSteps = Array.isArray(dp.steps) ? dp.steps : [];
@@ -1634,27 +1695,25 @@ async function processDump() {
       return { parsed, diagramTitle, diagramSteps };
 
     } else {
-      // Groq
+      // Groq — vision model for image calls, text model otherwise
       const textModel = selectedModel;
       const visionModel = PROVIDERS.groq.visionModel;
 
-      // Text call
-      const textMessages = b64
-        ? [{ role: 'user', content: [
-            { type: 'image_url', image_url: { url: `data:${imageFile.type};base64,${b64}` } },
-            { type: 'text', text: textPrompt }
-          ]}]
+      const imgContent = images.map(img => ({
+        type: 'image_url',
+        image_url: { url: `data:${img.type};base64,${img.b64}` }
+      }));
+
+      const textMessages = hasImages
+        ? [{ role: 'user', content: [...imgContent, { type: 'text', text: textPrompt }] }]
         : [{ role: 'user', content: textPrompt }];
-      const textRaw = await callGroq(textMessages, b64 ? visionModel : textModel, 6000);
+      const textRaw = await callGroq(textMessages, hasImages ? visionModel : textModel, 6000);
       const parsed = safeParseJSON(textRaw);
 
       let diagramTitle = '', diagramSteps = [];
-      if (b64 && diagPrompt) {
+      if (hasImages && diagPrompt) {
         try {
-          const dMessages = [{ role: 'user', content: [
-            { type: 'image_url', image_url: { url: `data:${imageFile.type};base64,${b64}` } },
-            { type: 'text', text: diagPrompt }
-          ]}];
+          const dMessages = [{ role: 'user', content: [...imgContent, { type: 'text', text: diagPrompt }] }];
           const dRaw = await callGroq(dMessages, visionModel, 6000);
           const dp = safeParseJSON(dRaw);
           diagramTitle = dp.title || ''; diagramSteps = Array.isArray(dp.steps) ? dp.steps : [];
@@ -1665,6 +1724,23 @@ async function processDump() {
   }
 
   // ── Build prompts ────────────────────────────────────────────────────────
+
+  // diagPrompt defined here so both CS and blog paths can use it
+  const diagPrompt = imageFiles.length ? `Look at this diagram or flowchart image carefully.
+
+Return ONLY valid JSON — no fences, no preamble:
+{
+  "title": "short diagram title max 5 words",
+  "steps": [
+    {"label": "Node label max 5 words", "group": "Section name", "highlight": false, "type": "rect"}
+  ]
+}
+
+STRICT RULES for label: max 5 plain words, NO special characters (no brackets, parentheses, slashes, dashes, quotes).
+type: "rect" for normal steps, "decision" for branch points.
+highlight: true only for 2-3 most important nodes.
+group: same value for consecutive related nodes.
+Include EVERY node — do not skip any.` : null;
 
   // ── CASE STUDY PATH ─────────────────────────────────────────────────────
   if (selectedDumpType === 'cs') {
@@ -1709,18 +1785,36 @@ Return ONLY valid JSON — no fences, no preamble:
   "insight": "The non-obvious realisation that made everything else possible. Sharp, specific, transferable.",
   "what_i_built": "What was actually shipped. Concrete. No fluff.",
   "narrative": "The full story following the 7-part structure above. Prose only. 600-800 words.",
-  "result": "The outcomes. Metrics first, then broader impact."
+  "result": "The outcomes. Metrics first, then broader impact.",
+  "diagram_title": "3-5 word title for the solution flow diagram",
+  "diagram_steps": [
+    {"label": "Step label max 5 words", "group": "Phase name", "highlight": false, "type": "rect"}
+  ]
 }
+
+DIAGRAM RULES for case study:
+- Always generate diagram_steps showing the problem to solution to result flow
+- type: "rect" for normal steps, "decision" for decision or branch points
+- highlight: true for 2-3 most critical nodes only
+- group: same string for consecutive related steps
+- Max 5 plain words per label, no special characters
 
 RAW NOTES:
 ${raw}`;
 
     setStatus('Processing case study…', '');
     try {
-      const result = await callAI(csPrompt, null, null);
+      const result = await callAI(csPrompt, imageFiles.length ? diagPrompt : null, imageFiles);
       const parsed = result.parsed;
       if (!parsed || !parsed.title) throw new Error('AI returned empty or invalid response — try again or switch model.');
-      currentDraft = { ...parsed, _type: 'cs' };
+      // Use image-derived diagram if available, else use AI-generated from CS content
+      const csDiagTitle = (result.diagramSteps && result.diagramSteps.length)
+        ? result.diagramTitle
+        : (parsed.diagram_title || '');
+      const csDiagSteps = (result.diagramSteps && result.diagramSteps.length)
+        ? result.diagramSteps
+        : (Array.isArray(parsed.diagram_steps) ? parsed.diagram_steps : []);
+      currentDraft = { ...parsed, _type: 'cs', diagram_title: csDiagTitle, diagram_steps: csDiagSteps };
       populateCSPreview(parsed);
       document.getElementById('dump-preview').classList.add('show');
       setStatus('Done ✓ — review and publish when ready', 'success');
@@ -1776,28 +1870,14 @@ Output ONLY valid JSON, no fences, no preamble:
 RAW NOTES:
 ${raw}`;
 
-  const diagPrompt = imageFile ? `Look at this diagram or flowchart image carefully.
-
-Return ONLY valid JSON — no fences, no preamble:
-{
-  "title": "short diagram title max 5 words",
-  "steps": [
-    {"label": "Node label max 5 words", "group": "Section name", "highlight": false, "type": "rect"}
-  ]
-}
-
-STRICT RULES for label: max 5 plain words, NO special characters (no brackets, parentheses, slashes, dashes, quotes).
-type: "rect" for normal steps, "decision" for branch points.
-highlight: true only for 2-3 most important nodes.
-group: same value for consecutive related nodes.
-Include EVERY node — do not skip any.` : null;
+  const diagPrompt_unused = null; // defined above, shared by both paths
 
   try {
-    setStatus(imageFile ? 'Step 1/2 — writing the post…' : `Writing with ${PROVIDERS[selectedProvider].models.find(m=>m.id===selectedModel)?.name || selectedModel}…`, '');
+    setStatus(imageFiles.length ? 'Step 1/2 — writing the post…' : `Writing with ${PROVIDERS[selectedProvider].models.find(m=>m.id===selectedModel)?.name || selectedModel}…`, '');
 
-    const { parsed, diagramTitle: imgDiagramTitle, diagramSteps: imgDiagramSteps } = await callAI(textPrompt, diagPrompt, imageFile);
+    const { parsed, diagramTitle: imgDiagramTitle, diagramSteps: imgDiagramSteps } = await callAI(textPrompt, diagPrompt, imageFiles);
 
-    if (imageFile && imgDiagramSteps.length) setStatus('Step 2/2 — reading the diagram… done ✓', '');
+    if (imageFiles.length && imgDiagramSteps.length) setStatus('Step 2/2 — reading the diagram… done ✓', '');
 
     // Prefer diagram from image if present, otherwise use diagram embedded in blog JSON
     const finalDiagramTitle = (imgDiagramSteps && imgDiagramSteps.length)
@@ -1835,7 +1915,25 @@ function populatePreview(d) {
   document.getElementById('prev-lesson').value = d.content?.lesson || '';
   document.getElementById('prev-takeaway').value = d.content?.takeaway || '';
   document.getElementById('prev-tags').value = (d.tags || []).join(', ');
-  document.getElementById('prev-img-caption').value = d.image_caption || '';
+  // Render per-image caption fields dynamically
+  const captionsWrap = document.getElementById('prev-img-captions-wrap');
+  const captionsContainer = document.getElementById('prev-img-captions');
+  const imgFiles = document.getElementById('dump-image').files;
+  if (imgFiles && imgFiles.length > 0) {
+    captionsWrap.style.display = 'block';
+    const existingCaptions = Array.isArray(d.image_captions) ? d.image_captions : [];
+    captionsContainer.innerHTML = Array.from(imgFiles).map((f, i) => `
+      <div style="margin-bottom:0.75rem;">
+        <p style="font-size:0.72rem;color:var(--text-3);margin-bottom:0.3rem;">Image ${i+1}: ${f.name}</p>
+        <input type="text" id="prev-img-caption-${i}" class="dump-field-input"
+          placeholder="Caption for image ${i+1} (e.g. The flow I drew on paper)"
+          value="${existingCaptions[i] || ''}"/>
+      </div>
+    `).join('');
+  } else {
+    captionsWrap.style.display = 'none';
+    captionsContainer.innerHTML = '';
+  }
   document.getElementById('prev-diagram').value = (d.diagram_steps && d.diagram_steps.length)
     ? JSON.stringify(d.diagram_steps, null, 2) : '';
   document.getElementById('prev-tech').value = d.content?.tech_section || '';
@@ -1854,6 +1952,10 @@ function populateCSPreview(d) {
   document.getElementById('prev-cs-built').value       = d.what_i_built || '';
   document.getElementById('prev-cs-narrative').value   = d.narrative || '';
   document.getElementById('prev-cs-result').value      = d.result || '';
+  // Populate diagram in the shared diagram field
+  const diagSteps = Array.isArray(d.diagram_steps) ? d.diagram_steps : [];
+  const diagField = document.getElementById('prev-diagram');
+  if (diagField) diagField.value = diagSteps.length ? JSON.stringify(diagSteps, null, 2) : '';
   // Highlight selected colour button
   selectCSColor(d.color || '#E8A020');
   // Ensure CS fields visible
@@ -1862,9 +1964,30 @@ function populateCSPreview(d) {
 
 
 async function publishCS() {
+  // Collect uploaded images
+  const csImgInput = document.getElementById('dump-image');
+  const csImgFiles = csImgInput && csImgInput.files.length > 0 ? Array.from(csImgInput.files) : [];
+  let csImgData = [], csCaptions = [];
+  if (csImgFiles.length > 0) {
+    csImgData = await Promise.all(csImgFiles.map(f => new Promise((res, rej) => {
+      const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f);
+    })));
+    csCaptions = csImgData.map((_, i) => {
+      const el = document.getElementById('prev-img-caption-' + i);
+      return el ? el.value.trim() : '';
+    });
+  }
+
   const cs = {
     id: 'cs-' + Date.now(),
+    image_data: csImgData,
+    image_captions: csCaptions,
     title:        document.getElementById('prev-title').value,
+    diagram_title: currentDraft?.diagram_title || '',
+    diagram_steps: (() => {
+      try { return JSON.parse(document.getElementById('prev-diagram').value || '[]'); }
+      catch { return []; }
+    })(),
     company:      document.getElementById('prev-cs-company').value,
     tag:          document.getElementById('prev-cs-tag').value,
     color:        document.getElementById('prev-cs-color').value || '#E8A020',
@@ -1939,9 +2062,15 @@ function editCS(id) {
 
 async function publishPost() {
   const imageInput = document.getElementById('dump-image');
-  const imageFile = imageInput && imageInput.files[0];
+  const pubImageFiles = imageInput && imageInput.files.length > 0
+    ? Array.from(imageInput.files)
+    : [];
 
-  const doPublish = async (imgData) => {
+  const doPublish = async (imgDataArray) => {
+    const captions = imgDataArray.map((_, i) => {
+      const el = document.getElementById('prev-img-caption-' + i);
+      return el ? el.value.trim() : '';
+    });
     const diagramSteps = (() => {
       try { return JSON.parse(document.getElementById('prev-diagram').value || '[]'); }
       catch { return []; }
@@ -1956,8 +2085,8 @@ async function publishPost() {
       category: selectedCategory,
       date: new Date().toISOString().split('T')[0],
       source: selectedTag,
-      image_data: imgData,
-      image_caption: document.getElementById('prev-img-caption').value,
+      image_data: imgDataArray,          // array of base64 strings
+      image_captions: captions,          // array of caption strings
       diagram_title: currentDraft?.diagram_title || '',
       diagram_steps: diagramSteps,
       content: {
@@ -1984,7 +2113,7 @@ async function publishPost() {
       updateQuadCounts();
       discardPreview();
       document.getElementById('dump-input').value = '';
-      document.getElementById('dump-image').value = '';
+      document.getElementById('dump-image').value = ''; document.getElementById('prev-img-captions-wrap').style.display='none'; document.getElementById('prev-img-captions').innerHTML='';
       document.getElementById('clear-img-btn').style.display = 'none';
       renderDumpPostsList();
     } catch(e) {
@@ -1992,13 +2121,20 @@ async function publishPost() {
     }
   };
 
-  if (imageFile) {
-    const reader = new FileReader();
-    reader.onload = () => doPublish(reader.result);
-    reader.onerror = () => doPublish(null);
-    reader.readAsDataURL(imageFile);
+  if (pubImageFiles.length > 0) {
+    try {
+      const base64Array = await Promise.all(pubImageFiles.map(f => new Promise((res, rej) => {
+        const r = new FileReader();
+        r.onload = () => res(r.result); // keep full data URL (includes mime type prefix)
+        r.onerror = rej;
+        r.readAsDataURL(f);
+      })));
+      await doPublish(base64Array);
+    } catch(e) {
+      await doPublish([]);
+    }
   } else {
-    await doPublish(null);
+    await doPublish([]);
   }
 }
 

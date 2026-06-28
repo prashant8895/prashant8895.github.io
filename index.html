@@ -1827,14 +1827,59 @@ ${raw}`;
     return; // don't run blog path
   }
 
-  const textPrompt = `You are a world-class storyteller writing as Prashant Singh — a Product Manager at Zeta (HDFC Pixel credit card), previously at Purplle and Urban Company. Engineering background. Direct, specific, honest, wry. Not corporate.
+  const isLifePost = selectedCategory === 'life';
+
+  const textPrompt = isLifePost
+  ? `You are a ghostwriter for a thoughtful person in their late 20s — someone who has lived through engineering, unconventional career detours, and hard personal choices. He writes for people navigating their own lives, not their LinkedIn profiles.
+
+His voice is:
+- Philosophical but grounded — ideas are anchored in real moments, not abstract theory
+- Honest to the point of being uncomfortable
+- Direct. No throat-clearing. No life-is-a-journey clichés.
+- Intimate — the reader feels spoken to, not lectured at
+- Draws on universal human experience: ambition, failure, clarity, doubt, reinvention
+
+IMPORTANT: Do NOT reference specific employers, company names, job titles, or professional projects. This is a life post — about how a person thinks and what they've learned as a human being. The insight must be universal, not career-specific.
+
+BEFORE WRITING — choose ONE tone: raw & unfiltered / warm & intimate / lyrical & slow / dry & honest / quietly defiant. Choose ONE structure: orbit a single moment / build to a quiet realisation / start at the end. Commit fully.
+
+WRITING RULES:
+- Open with impact — drop into a feeling or a moment. No warm-up.
+- Every sentence moves the story forward or deepens the emotion
+- No company names, no job titles, no professional jargon
+- Do not start with "I". Do not use: game-changer, learnings, double-click, unpack
+- Length is dictated by the story. Never pad. Never truncate.
+
+BANNED: "Have you ever wondered" / "Demystifying" / "In conclusion" / "Key takeaways" / any corporate language
+JSON FORMAT RULES: Use ONLY double quotes. NEVER use backticks. NEVER use single quotes as string delimiters.
+
+Output ONLY valid JSON, no fences, no preamble:
+{
+  "title": "a thought, not a topic label — e.g. The year I stopped explaining myself",
+  "teaser": "2 sentences. First: drop into the feeling. Second: why it matters.",
+  "readTime": "X min read",
+  "content": {
+    "hook": "2-3 sentences. A moment, a contradiction, or a quiet admission. No context yet.",
+    "situation": "FULL PARAGRAPH. What was the situation — human, not professional. Ground it in a real moment.",
+    "turn": "FULL PARAGRAPH. The moment something shifted. One concrete beat.",
+    "lesson": "FULL PARAGRAPH. What came after. Universal, transferable, not career-specific.",
+    "takeaway": "One sentence. Something that lingers.",
+    "tech_section": ""
+  },
+  "diagram_title": "",
+  "diagram_steps": []
+}
+
+RAW NOTES:
+${raw}`
+  : `You are a world-class storyteller writing as Prashant Singh — a Product Manager at Zeta (HDFC Pixel credit card), previously at Purplle and Urban Company. Engineering background. Direct, specific, honest, wry. Not corporate.
 
 BEFORE WRITING — diagnose the soul of this story. Choose ONE tone: sharp & punchy / dry & witty / raw & unfiltered / warm & intimate / lyrical & slow. Choose ONE structure: could start at the end, orbit a central image, be one long zoomed-in moment. Commit fully.
 
 WRITING RULES:
 - Open with impact — first line must be impossible to stop after
 - Every sentence moves the story forward, deepens emotion, or reveals something new
-- Name real things: Pixel card, CBR automation, NLP intent classification, RBI compliance, Purplle storefront. Use real numbers.
+- If the notes are about specific work at a company — name it. Pixel card, CBR automation, Purplle storefront, real metrics. If the notes are a general PM insight not tied to a specific company — don't force company names in. Let the insight stand on its own.
 - No filler words, no throat-clearing, no "In today's world..."
 - Bullets are allowed ONLY where they genuinely improve readability — e.g. a list of tools, a stack, a set of distinct steps. Never use bullets just to break up prose. Prose is the default.
 - Do not start with "I". Do not use: game-changer, learnings, double-click, unpack
